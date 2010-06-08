@@ -20,9 +20,9 @@ int16_t UpdatePID(struct *pid, int16_t referencia, int16_t posicion_actual)
     else if(pid->integratedError < -WIND_UP_GUARD)
         pid->integratedError = -WIND_UP_GUARD;
 
-    int16_t result = pid->P*e/4 + pid->integratedError*pid->I/1000 + pid->D*(e - pid->lastPosition)/10;
+    int16_t result = (pid->P*e)/10 + (pid->integratedError*pid->I)/10 + (pid->D*(posicion_actual - pid->lastPosition))/10;
 
-    pid->lastPosition = e;
+    pid->lastPosition = posicion_actual;
 
     return result;
 }
