@@ -30,9 +30,8 @@ int8_t emergenciaSTOP=1;
 int16_t I_Max[2]={0,0};
 int16_t I_Min[2]={0,0};
 
-#ifdef DEBUG
-    int16_t u[4] = {0,0,0,0};
-#endif
+int16_t u[4] = {0,0,0,0};
+int16_t omega=0; 
 
 void Control(void) // Timer.c llama esta funcion cada 1ms
 {
@@ -41,14 +40,12 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
     static int16_t e_old[4];
     int16_t e[4];
     // variables auxiliares
-#ifndef DEBUG
-    int16_t u[4];
-#endif
     uint8_t i;
+    static uint8_t k=0;
     static uint8_t periodo=0;
 
-    //cada 20ms el if es falso
-    if(periodo++%20 != 0) {
+    //cada 5ms el if es falso
+    if(periodo++%5 != 0) {
         return;
     }
     
@@ -56,14 +53,10 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
     GetAccelerometer();
 
     //cada 200ms ejecuta esto:
-    if(periodo%20*10 == 0) {
+    if(periodo%50 == 1) {
         periodo=1;
-    }
-
-
-    // PID
-    for(i=0; i<2; i++) {
-        e[i] = gyro[i] - joystick[i]/2;
+        i=1;
+        e[i] = joystick[0]/10 - angle[0];
 
         integrador[i] += I[i]*e[i];
 
@@ -73,7 +66,30 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
         else if(integrador[i] < I_Min[i])
             integrador[i] = I_Min[i];
 
-        u[i] = P[i]*e[i]/4 + integrador[i]/1000 + D[i]*(e[i] - e_old[i])/10;
+        omega = P[i]*e[i]/4 + integrador[i]/1000 + D[i]*(e[i] - e_old[i])/10;
+
+        e_old[i] = e[i];
+        if(k++%128==0) {
+            printf("A: e: %d P: %d I:%d D:%d II:%d\n", e[1], P[1], I[1], D[1], integrador[1]);
+            printf("G: e: %d P: %d I:%d D:%d II:%d\n", e[0], P[0], I[0], D[0], integrador[0]);
+        }
+        
+    }
+
+
+    // PID
+    for(i=0; i<1; i++) {
+        e[i] = gyro[i] - omega;
+
+        integrador[i] += I[i]*e[i];
+
+        // Antienrrollamiento
+        if(integrador[i] > I_Max[i])
+            integrador[i] = I_Max[i];
+        else if(integrador[i] < I_Min[i])
+            integrador[i] = I_Min[i];
+
+        u[i] = P[i]*e[i]/10 + integrador[i]/1000 + D[i]*(e[i] - e_old[i])/10;
 
         e_old[i] = e[i];
     }
