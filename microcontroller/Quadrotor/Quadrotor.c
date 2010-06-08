@@ -156,18 +156,20 @@ int main(void)
                     if(!(0 <= ch[1] && ch[1] <= 1)) continue;
                     int16_t value = (ch[3] << 8) | ch[4];
 
+                    if(value<0) continue;
+
                     if((ch[2] == 'P')) {
-                        P[ch[1]] = (int8_t)value;
+                        pid[ch[1]].P = value;
                     } else if((ch[2] == 'I')) {
-                        I[ch[1]] = (int8_t)value;
+                        pid[ch[1]].I = value;
                     } else if((ch[2] == 'D')) {
-                        D[ch[1]] = (int8_t)value;
-                    } else if((ch[2] == 'M')) {
-                        I_Max[ch[1]] = value;
-                    } else if((ch[2] == 'm')) {
-                        I_Min[ch[1]] = value;
+                        pid[ch[1]].D = value;
+                    } else if((ch[2] == 'W')) {
+                        pid[ch[1]].windUpGuard = value;
                     }
                     continue;
+                } else if((ch[0] == 'z')) {
+                   zeroIntegralError();
                 } else if((ch[0] == 'S')) {
                     if(ch[1] == 1) {
                         emergenciaSTOP = 1;

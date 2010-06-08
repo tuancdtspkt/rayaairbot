@@ -7,6 +7,7 @@ struct PID {
   int16_t P, I, D;
   int16_t lastPosition;
   int16_t integratedError;
+  int16_t windUpGuard;
 };
 
 void UpdatePID(struct *pid, int16_t referencia, int16_t posicion_actual);
