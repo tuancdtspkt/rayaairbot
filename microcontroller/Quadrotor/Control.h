@@ -2,6 +2,7 @@
 #define CONTROL_H
 
 #include "Quadrotor.h"
+#include "Pid.h"
 
 extern int16_t u[4];
 

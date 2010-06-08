@@ -119,7 +119,7 @@ int main(void)
                 } while(ch[j++] != '#');
 
                 if(j<=3) {
-                    //printf("!\n");
+                    printf("!\n");
                     continue;
                 }
                 
@@ -128,20 +128,20 @@ int main(void)
                 }
 
                 if(checksum != ch[j-2]) {
-                    //printf("!!\n");
+                    printf("!!\n");
                     continue;
                 }
 
                 if (( ch[0] == 'c' )) {
                     if(j-3 != 3) {
-                        //printf("!!!\n");
+                        printf("!!!\n");
                         continue;
                     }
                     //c[1] -> axis
                     //c[2] -> value1
                     //c[3] -> value2
                     if(!(0 <= ch[1] && ch[1] <= 3)) {
-                        //printf("!!!!\n");
+                        printf("!!!!\n");
                         continue;
                     }
                     int16_t value = (ch[2] << 8) | ch[3];
