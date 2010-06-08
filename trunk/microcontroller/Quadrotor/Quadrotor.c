@@ -28,7 +28,7 @@
 
 int16_t joystick[ 4 ] = {0,0,0,0}; 
 
-#define N_DATOS 5
+#define N_DATOS 20
 
 int main(void)
 {
@@ -36,7 +36,7 @@ int main(void)
     int     led = 0;
     FILE   *u0;
     FILE   *u1;
-    uint16_t datos[5][N_DATOS];
+    uint16_t datos[8][N_DATOS];
     uint8_t datos_periodo=0;
 
     InitHardware();
@@ -80,7 +80,6 @@ int main(void)
         }
 
         // Tick rate is 100/sec so waiting for 100 waits for 1 sec
-#ifdef DEBUG
 //        printf("%d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", gyro[0], gyro[1], u[0], u[1], u[2], u[3], motor[0], motor[1], motor[2], motor[3], joystick[0], joystick[1], joystick[2], joystick[3]); 
         //printf("%d %d %d %d %d %d\n", gyro[0], u[0], u[3], motor[1], motor[2], joystick[3]);
 /*
@@ -89,16 +88,20 @@ int main(void)
         datos[2][datos_periodo] = accelerometer[0];
         datos[3][datos_periodo] = accelerometer[1];
         datos[4][datos_periodo] = accelerometer[2];
+        datos[5][datos_periodo] = angle[0];
+        datos[6][datos_periodo] = angle[1];
+        datos[7][datos_periodo] = omega;
         //printf("%d\n", datos_periodo);
         if(++datos_periodo % N_DATOS == 0) {
             datos_periodo = 0;
             for(i=0; i<N_DATOS; i++) {
-                printf("%d %d %d %d %d\n", datos[0][i], datos[1][i], datos[2][i], datos[3][i], datos[4][i]);
+//                printf("%d\n", datos[7][i]);
+//                printf("%d %d %d %d %d %d %d %d\n", datos[0][i], datos[1][i], datos[2][i], datos[3][i], datos[4][i], datos[5][i], datos[6][i], datos[7][i]);
             }
         }
 */
-        printf("%d %d %d %d %d\n", gyro[0], gyro[1], accelerometer[0], accelerometer[1], accelerometer[2]);
-#endif
+//        printf("%d %d %d %d %d %d %d\n", gyro[0], gyro[1], accelerometer[0], accelerometer[1], accelerometer[2], angle[0], angle[1]);
+
         for ( i = 0; i < 2; i++ ) 
         {
             WaitForTimer0Rollover();
