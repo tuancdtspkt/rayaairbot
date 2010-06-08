@@ -22,12 +22,18 @@
 // motor[2] -> Este
 // motor[3] -> Norte
 
-struct PID pid[2];
+struct PID pid[2]={{0,0,0,0,0},{0,0,0,0,0}};
 
 int8_t emergenciaSTOP=1;
 
 int16_t u[4] = {0,0,0,0};
 int16_t omega=0; 
+
+void zeroIntegralError() {
+  uint8_t n;
+  for(n=0;n<2;n++)
+    pid[n].integratedError = 0;
+}
 
 void Control(void) // Timer.c llama esta funcion cada 1ms
 {
