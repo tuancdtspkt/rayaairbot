@@ -1,16 +1,18 @@
 #if !defined( PID_H )
 #define PID_H
 
-#define WIND_UP_GUARD 1000
+#include <avr/io.h>
 
 struct PID {
   int16_t P, I, D;
   int16_t lastPosition;
   int16_t integratedError;
   int16_t windUpGuard;
+  int16_t e;
+  int16_t r;
 };
 
-void UpdatePID(struct *pid, int16_t referencia, int16_t posicion_actual);
+int16_t UpdatePID(struct PID *pid, int16_t referencia, int16_t posicion_actual);
 
 
 #endif
