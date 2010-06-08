@@ -61,12 +61,13 @@ QuadrotorJoystick::QuadrotorJoystick(int joy_dev_, QString serial_dev_, QWidget 
 }
 
 void QuadrotorJoystick::buttonValueChanged(int boton, bool b) {
-    if(b)
+    if(b) {
         if(boton==0) {
             on_pushButton_clicked();
         } else if(boton==1) {
             initValues();
         }
+    }
 }
 
 void QuadrotorJoystick::initValues(void) {    
@@ -74,7 +75,11 @@ void QuadrotorJoystick::initValues(void) {
     on_spinBox_I_valueChanged(ui->spinBox_I->value());
     on_spinBox_D_valueChanged(ui->spinBox_D->value());
     on_spinBox_I_Max_valueChanged(ui->spinBox_I_Max->value());
-    on_spinBox_I_Min_valueChanged(ui->spinBox_I_Min->value());
+
+    on_spinBox_P_2_valueChanged(ui->spinBox_P_2->value());
+    on_spinBox_I_2_valueChanged(ui->spinBox_I_2->value());
+    on_spinBox_D_2_valueChanged(ui->spinBox_D_2->value());
+    on_spinBox_I_Max_2_valueChanged(ui->spinBox_I_Max_2->value());
 }
 
 void QuadrotorJoystick::serialRX() {
@@ -89,7 +94,14 @@ void QuadrotorJoystick::serialRX() {
     while(serial_data.contains('\n')) {
         int left = serial_data.indexOf('\n') + 1;
         QStringList l = serial_data.left(left).split(" ");
-        if(l.size() == 5) {
+
+        if(l.size() == 1) {
+
+            //ui->label_M0->setText(l[0]);
+
+
+/*
+        if(l.size() == 8) {
 //            qWarning("recibido-> %s", serial_data.left(left).toAscii().data());
             DataPlot *dataplot = qobject_cast<DataPlot *>(ui->widget_plot);
             if (dataplot) {
@@ -101,9 +113,10 @@ void QuadrotorJoystick::serialRX() {
             }
 
             ui->label_u0->setText(QString::number(sqrt(pow(l[2].toInt(),2)+pow(l[3].toInt(),2)+pow(l[4].toInt(),2))));
-            ui->label_u1->setText(QString::number(((double)tan(l[3].toInt())/((double)l[2].toInt())) * 180.0 / M_PI ));
-            ui->label_u2->setText(QString::number(((double)tan(l[4].toInt())/((double)l[2].toInt())) * 180.0 / M_PI ));
-
+            ui->label_u1->setText(l[5]);
+            ui->label_u2->setText(l[6]);
+            ui->label_M0->setText(l[7]);
+*/
 /*
         if(l.size() == 6) {
 //            qWarning("recibido-> %s", serial_data.left(left).toAscii().data());
@@ -215,7 +228,7 @@ void QuadrotorJoystick::on_spinBox_P_valueChanged(int value)
     s += "P";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
-    qWarning("enviando: P: X value: %d", value);
+    qWarning("enviando: P0: X value: %d", value);
     serialTX(s);
 }
 
@@ -233,7 +246,7 @@ void QuadrotorJoystick::on_spinBox_I_valueChanged(int value)
     s += "I";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
-    qWarning("enviando: I: X value: %d", value);
+    qWarning("enviando: I0: X value: %d", value);
     serialTX(s);
 }
 
@@ -252,7 +265,7 @@ void QuadrotorJoystick::on_spinBox_D_valueChanged(int value)
     s += "D";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
-    qWarning("enviando: D: X value: %d", value);
+    qWarning("enviando: D0: X value: %d", value);
     serialTX(s);
 }
 
@@ -267,34 +280,16 @@ void QuadrotorJoystick::on_spinBox_I_Max_valueChanged(int value)
     ui->horizontalSlider_I_Max->setValue(value);
     s = "s";
     s += (char)0;
-    s += "M";
+    s += "W";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
-    qWarning("enviando: M: X value: %d", value);
+    qWarning("enviando: M0: X value: %d", value);
     serialTX(s);
 }
 
 void QuadrotorJoystick::on_horizontalSlider_I_Max_valueChanged(int value)
 {
     ui->spinBox_I_Max->setValue(value);
-}
-
-void QuadrotorJoystick::on_spinBox_I_Min_valueChanged(int value)
-{
-    QString s;
-    ui->horizontalSlider_I_Min->setValue(value);
-    s = "s";
-    s += (char)0;
-    s += "m";
-    s += (value>>8)&0x00FF;
-    s += value&0x00FF;
-    qWarning("enviando: m: X value: %d", value);
-    serialTX(s);
-}
-
-void QuadrotorJoystick::on_horizontalSlider_I_Min_valueChanged(int value)
-{
-    ui->spinBox_I_Min->setValue(value);
 }
 
 void QuadrotorJoystick::on_pushButton_clicked()
@@ -331,4 +326,80 @@ void QuadrotorJoystick::setEmergenciaSTOP(bool b)
         serialTX(s);
         serialTX(s);
     }
+}
+
+
+
+
+
+void QuadrotorJoystick::on_spinBox_P_2_valueChanged(int value)
+{
+    QString s;
+    ui->horizontalSlider_P_2->setValue(value);
+    s = "s";
+    s += (char)1;
+    s += "P";
+    s += (value>>8)&0x00FF;
+    s += value&0x00FF;
+    qWarning("enviando: P1: X value: %d", value);
+    serialTX(s);
+}
+
+void QuadrotorJoystick::on_horizontalSlider_P_2_valueChanged(int value)
+{
+    ui->spinBox_P_2->setValue(value);
+}
+
+void QuadrotorJoystick::on_spinBox_I_2_valueChanged(int value)
+{
+    QString s;
+    ui->horizontalSlider_I_2->setValue(value);
+    s = "s";
+    s += (char)1;
+    s += "I";
+    s += (value>>8)&0x00FF;
+    s += value&0x00FF;
+    qWarning("enviando: I1: X value: %d", value);
+    serialTX(s);
+}
+
+void QuadrotorJoystick::on_horizontalSlider_I_2_valueChanged(int value)
+{
+    ui->spinBox_I_2->setValue(value);
+}
+
+void QuadrotorJoystick::on_spinBox_D_2_valueChanged(int value)
+{
+    QString s;
+    ui->horizontalSlider_D_2->setValue(value);
+    s = "s";
+    s += (char)1;
+    s += "D";
+    s += (value>>8)&0x00FF;
+    s += value&0x00FF;
+    qWarning("enviando: D1: X value: %d", value);
+    serialTX(s);
+}
+
+void QuadrotorJoystick::on_horizontalSlider_D_2_valueChanged(int value)
+{
+    ui->spinBox_D_2->setValue(value);
+}
+
+void QuadrotorJoystick::on_spinBox_I_Max_2_valueChanged(int value)
+{
+    QString s;
+    ui->horizontalSlider_I_Max_2->setValue(value);
+    s = "s";
+    s += (char)1;
+    s += "W";
+    s += (value>>8)&0x00FF;
+    s += value&0x00FF;
+    qWarning("enviando: M1: X value: %d", value);
+    serialTX(s);
+}
+
+void QuadrotorJoystick::on_horizontalSlider_I_Max_2_valueChanged(int value)
+{
+    ui->spinBox_I_Max_2->setValue(value);
 }

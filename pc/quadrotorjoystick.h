@@ -43,8 +43,7 @@ private:
 private slots:
     void on_pushButton_clicked();
     void initValues(void);
-    void on_horizontalSlider_I_Min_valueChanged(int value);
-    void on_spinBox_I_Min_valueChanged(int );
+
     void on_horizontalSlider_I_Max_valueChanged(int value);
     void on_spinBox_I_Max_valueChanged(int );
     void on_horizontalSlider_D_valueChanged(int value);
@@ -53,6 +52,15 @@ private slots:
     void on_spinBox_I_valueChanged(int );
     void on_horizontalSlider_P_valueChanged(int value);
     void on_spinBox_P_valueChanged(int );
+
+    void on_horizontalSlider_I_Max_2_valueChanged(int value);
+    void on_spinBox_I_Max_2_valueChanged(int );
+    void on_horizontalSlider_D_2_valueChanged(int value);
+    void on_spinBox_D_2_valueChanged(int );
+    void on_horizontalSlider_I_2_valueChanged(int value);
+    void on_spinBox_I_2_valueChanged(int );
+    void on_horizontalSlider_P_2_valueChanged(int value);
+    void on_spinBox_P_2_valueChanged(int );
 };
 
 #endif // QUADROTORJOYSTICK_H
