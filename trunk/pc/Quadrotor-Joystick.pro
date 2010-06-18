@@ -1,6 +1,7 @@
 DESTDIR = build
 CONFIG += qt \
     gui
+QT += network
 
 # event driven device enumeration on windows requires the gui module
 OBJECTS_DIR = tmp
@@ -11,11 +12,13 @@ HEADERS = qextserialport.h \
     qextserialport_global.h \
     quadrotorjoystick.h \
     data_plot.h \
-    data_plot2.h
+    data_plot2.h \
+    rayaairbot.h
 SOURCES = qextserialport.cpp \
     quadrotorjoystick.cpp \
     data_plot.cpp \
-    data_plot2.cpp
+    data_plot2.cpp \
+    rayaairbot.cpp
 FORMS += mainwindow.ui
 LIBS += -lqwt-qt4
 unix:SOURCES += posix_qextserialport.cpp
