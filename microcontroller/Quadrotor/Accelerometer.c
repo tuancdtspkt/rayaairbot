@@ -17,12 +17,12 @@ void GetAccelerometer() {
 
     // Captura ADC
     for(i=0; i<3; i++) {
-        gADC[i] = a2d_10(i+4) - 343;
+        gADC[i] = a2d_10(i+4) - 341;
     }
 
     // Ajustando en comparacion al voltaje de referencia 
     for(i=0; i<3; i++) {
-        accelerometer_double[i] += (double)(gADC[i] - accelerometer_double[i])/15.0;
+        accelerometer_double[i] += (double)(gADC[i] - accelerometer_double[i])/2.0;
         accelerometer[i] = accelerometer_double[i];
 //        gADC_ant[i] = gADC[i];
 //        accelerometer[i] = (1-A)*gADC[i] + A*accelerometer_anterior[i];
@@ -32,7 +32,8 @@ void GetAccelerometer() {
     }
 
     
-    angle[0] = atan2(accelerometer[2], accelerometer[1])*1800/M_PI+900;
+    //angle[0] = atan2(accelerometer[2], accelerometer[1])*1800/M_PI+900;
+    angle[0] = ((double)atan2(accelerometer[2], accelerometer[1])+(double)1.5708)*(double)100.0;
     angle[1] = atan2(accelerometer[2], accelerometer[0])*1800/M_PI+900;
 
     return;

@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include <unistd.h>
 #include <QTimer>
+#include <map>
+
 
 QuadrotorJoystick::~QuadrotorJoystick()
 {
@@ -30,15 +32,15 @@ QuadrotorJoystick::QuadrotorJoystick(int joy_dev_, QString serial_dev_, QWidget 
     joy_dev = joy_dev_;
     serial_dev = serial_dev_;
 
-    joy = new QJoystick();
+//    joy = new QJoystick();
 /*
     QStringList joylist = joy->joyList();
     for(int i=0; i<joylist.size();i++) {
         qWarning("Joystick %d, %s\n", i, joylist.at(i).toAscii().data() );
     }*/
 
-    joy->open(joy_dev);
-
+//    joy->open(joy_dev);
+/*
     port = new QextSerialPort(serial_dev, QextSerialPort::EventDriven);
     port->setBaudRate(BAUD9600);
     port->setFlowControl(FLOW_OFF);
@@ -56,8 +58,12 @@ QuadrotorJoystick::QuadrotorJoystick(int joy_dev_, QString serial_dev_, QWidget 
 
     connect(joy, SIGNAL(axisValueChanged(int,int)), this, SLOT(axisValueChanged(int,int)));
     connect(joy, SIGNAL(buttonValueChanged(int,bool)), this, SLOT(buttonValueChanged(int,bool)));
+*/
+//    QTimer::singleShot(100, this, SLOT(initValues()));
 
-    QTimer::singleShot(100, this, SLOT(initValues()));
+ rayaairbot =  new RayaAirBot;
+
+
 }
 
 void QuadrotorJoystick::buttonValueChanged(int boton, bool b) {
@@ -95,8 +101,12 @@ void QuadrotorJoystick::serialRX() {
         int left = serial_data.indexOf('\n') + 1;
         QStringList l = serial_data.left(left).split(" ");
 
-        if(l.size() == 1) {
+        if(l.size() == 2) {
 
+            DataPlot *dataplot = qobject_cast<DataPlot *>(ui->widget_plot);
+            if (dataplot) {
+                ui->widget_plot->addData(0, l[1].toInt());
+            }
             //ui->label_M0->setText(l[0]);
 
 
@@ -224,7 +234,7 @@ void QuadrotorJoystick::on_spinBox_P_valueChanged(int value)
     QString s;
     ui->horizontalSlider_P->setValue(value);
     s = "s";
-    s += (char)0;
+    s += (char)1;
     s += "P";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
@@ -242,7 +252,7 @@ void QuadrotorJoystick::on_spinBox_I_valueChanged(int value)
     QString s;
     ui->horizontalSlider_I->setValue(value);
     s = "s";
-    s += (char)0;
+    s += (char)1;
     s += "I";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
@@ -261,7 +271,7 @@ void QuadrotorJoystick::on_spinBox_D_valueChanged(int value)
     QString s;
     ui->horizontalSlider_D->setValue(value);
     s = "s";
-    s += (char)0;
+    s += (char)1;
     s += "D";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
@@ -279,7 +289,7 @@ void QuadrotorJoystick::on_spinBox_I_Max_valueChanged(int value)
     QString s;
     ui->horizontalSlider_I_Max->setValue(value);
     s = "s";
-    s += (char)0;
+    s += (char)1;
     s += "W";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
@@ -337,7 +347,7 @@ void QuadrotorJoystick::on_spinBox_P_2_valueChanged(int value)
     QString s;
     ui->horizontalSlider_P_2->setValue(value);
     s = "s";
-    s += (char)1;
+    s += (char)0;
     s += "P";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
@@ -355,7 +365,7 @@ void QuadrotorJoystick::on_spinBox_I_2_valueChanged(int value)
     QString s;
     ui->horizontalSlider_I_2->setValue(value);
     s = "s";
-    s += (char)1;
+    s += (char)0;
     s += "I";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
@@ -373,7 +383,7 @@ void QuadrotorJoystick::on_spinBox_D_2_valueChanged(int value)
     QString s;
     ui->horizontalSlider_D_2->setValue(value);
     s = "s";
-    s += (char)1;
+    s += (char)0;
     s += "D";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
@@ -391,7 +401,7 @@ void QuadrotorJoystick::on_spinBox_I_Max_2_valueChanged(int value)
     QString s;
     ui->horizontalSlider_I_Max_2->setValue(value);
     s = "s";
-    s += (char)1;
+    s += (char)0;
     s += "W";
     s += (value>>8)&0x00FF;
     s += value&0x00FF;

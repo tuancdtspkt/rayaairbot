@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>837</width>
+    <width>942</width>
     <height>722</height>
    </rect>
   </property>
@@ -103,7 +103,7 @@
                 <item>
                  <widget class="QSpinBox" name="spinBox_P">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="value">
                    <number>10</number>
@@ -113,7 +113,7 @@
                 <item>
                  <widget class="QSlider" name="horizontalSlider_P">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="value">
                    <number>10</number>
@@ -145,7 +145,7 @@
                 <item>
                  <widget class="QSpinBox" name="spinBox_I">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="singleStep">
                    <number>1</number>
@@ -158,7 +158,7 @@
                 <item>
                  <widget class="QSlider" name="horizontalSlider_I">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="value">
                    <number>50</number>
@@ -190,7 +190,7 @@
                 <item>
                  <widget class="QSpinBox" name="spinBox_D">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="value">
                    <number>3</number>
@@ -200,7 +200,7 @@
                 <item>
                  <widget class="QSlider" name="horizontalSlider_D">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="value">
                    <number>3</number>
@@ -232,7 +232,7 @@
                 <item>
                  <widget class="QSpinBox" name="spinBox_I_Max">
                   <property name="maximum">
-                   <number>200</number>
+                   <number>30000</number>
                   </property>
                   <property name="singleStep">
                    <number>1</number>
@@ -245,7 +245,7 @@
                 <item>
                  <widget class="QSlider" name="horizontalSlider_I_Max">
                   <property name="maximum">
-                   <number>200</number>
+                   <number>30000</number>
                   </property>
                   <property name="pageStep">
                    <number>10</number>
@@ -318,7 +318,7 @@
                 <item>
                  <widget class="QSpinBox" name="spinBox_P_2">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="value">
                    <number>10</number>
@@ -328,7 +328,7 @@
                 <item>
                  <widget class="QSlider" name="horizontalSlider_P_2">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="value">
                    <number>10</number>
@@ -360,7 +360,7 @@
                 <item>
                  <widget class="QSpinBox" name="spinBox_I_2">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="singleStep">
                    <number>1</number>
@@ -373,7 +373,7 @@
                 <item>
                  <widget class="QSlider" name="horizontalSlider_I_2">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="value">
                    <number>50</number>
@@ -405,7 +405,7 @@
                 <item>
                  <widget class="QSpinBox" name="spinBox_D_2">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="value">
                    <number>3</number>
@@ -415,7 +415,7 @@
                 <item>
                  <widget class="QSlider" name="horizontalSlider_D_2">
                   <property name="maximum">
-                   <number>300</number>
+                   <number>30000</number>
                   </property>
                   <property name="value">
                    <number>3</number>
@@ -447,7 +447,7 @@
                 <item>
                  <widget class="QSpinBox" name="spinBox_I_Max_2">
                   <property name="maximum">
-                   <number>200</number>
+                   <number>30000</number>
                   </property>
                   <property name="singleStep">
                    <number>1</number>
@@ -460,7 +460,7 @@
                 <item>
                  <widget class="QSlider" name="horizontalSlider_I_Max_2">
                   <property name="maximum">
-                   <number>200</number>
+                   <number>30000</number>
                   </property>
                   <property name="pageStep">
                    <number>10</number>
@@ -523,7 +523,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>837</width>
+     <width>942</width>
      <height>23</height>
     </rect>
    </property>

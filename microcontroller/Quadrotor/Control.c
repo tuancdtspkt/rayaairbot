@@ -39,7 +39,7 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
 {
     // variables auxiliares
     uint8_t i;
-    static uint8_t k=0;
+    static uint16_t k=0;
     static uint8_t periodo=0;
 
     //cada 5ms el if es falso
@@ -50,6 +50,8 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
     GetGyros();
     GetAccelerometer();
 
+        periodo=1;
+/*
     //cada 50ms ejecuta esto:
     if(periodo%50 == 1) {
         periodo=1;
@@ -67,7 +69,14 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
 
     // PID
     u[0] = UpdatePID(&pid[1], omega, gyro[0]);
+*/
+    u[0] = UpdatePID(&pid[1], joystick[0], gyro[0]);
 
+    if(k++%128==0) {
+       // printf("a %d\n", gyro[0]);
+        printf("G: e: %d - (%d) = %d\n", joystick[0], gyro[0], pid[1].e);
+        printf("G: e:%d r:%d P:%d I:%d D:%d II:%d\n", pid[1].e, pid[1].r, pid[1].P, pid[1].I, pid[1].D, pid[1].integratedError);
+    }
 
     //u[0] = joystick[0]/10;
     u[1] = joystick[1];

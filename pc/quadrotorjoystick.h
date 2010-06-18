@@ -8,6 +8,7 @@
 #include <QByteArray>
 #include "qjoystick.h"
 #include "qextserialport.h"
+#include "rayaairbot.h"
 
 namespace Ui {
     class MainWindow;
@@ -23,6 +24,10 @@ public:
     int joy_dev;
     QString serial_dev;
     QString serial_data;
+
+    RayaAirBot *rayaairbot;
+
+
 
 //signals:
 protected:
