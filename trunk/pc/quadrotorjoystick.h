@@ -7,7 +7,6 @@
 #include <QStringList>
 #include <QByteArray>
 #include "qjoystick.h"
-#include "qextserialport.h"
 #include "rayaairbot.h"
 
 namespace Ui {
@@ -20,7 +19,6 @@ public:
     QuadrotorJoystick(int joy_dev_ = 0, QString serial_dev_ = "/dev/ttyUSB0", QWidget *parent = 0);
     ~QuadrotorJoystick();
     QJoystick *joy;
-    QextSerialPort *port;
     int joy_dev;
     QString serial_dev;
     QString serial_data;
@@ -46,6 +44,8 @@ private:
     bool emergenciaSTOP;
 
 private slots:
+    void on_pushButton_send_s_clicked();
+    void on_pushButton_send_l_clicked();
     void on_pushButton_clicked();
     void initValues(void);
 
