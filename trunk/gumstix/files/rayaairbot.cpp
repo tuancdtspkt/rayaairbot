@@ -65,7 +65,7 @@ void RayaAirBot::newCommandProcess(quint8 comando, QString s) {
         emit newCommandToSerial(s);
         break;
     default:
-        qDebug() << "Comando " << comando << " no está definido. Dato: " << s;
+        qDebug() << "Comando " << comando << " no esta definido. Dato: " << s;
         break;
     }
 }

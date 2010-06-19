@@ -12,7 +12,7 @@
      RayaAirBot(QObject *parent = 0);
 
  public slots:
-     newCommandFromSerial(QString s);
+     void newCommandFromSerial(QString s);
      void send(quint8 comando, QString s);
 
  private slots:
@@ -23,7 +23,7 @@
 
  signals:
      void newCommand(quint8 comando, QString s);
-     void newCommandFromSerial(QString s);
+     void newCommandToSerial(QString s);
 
  private:
      QTcpServer *tcpServer;
