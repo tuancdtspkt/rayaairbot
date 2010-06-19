@@ -1,5 +1,8 @@
 TEMPLATE = app
 
 # Input
-SOURCES += Rayaairbot.cpp
+SOURCES += main.cpp \
+    rayaairbot.cpp
 QT -= gui
+QT += network
+HEADERS += rayaairbot.h
