@@ -89,13 +89,8 @@ void QuadrotorJoystick::initValues(void) {
 }
 
 void QuadrotorJoystick::serialRX() {
-    QByteArray bytes;
-    int a = port->bytesAvailable();
-    bytes.resize(a);
-    port->read(bytes.data(), bytes.size());
 //    qWarning("bytes read: %d", bytes.size());
-
-    serial_data += bytes;
+    QString serial_data = "asd";
 
     while(serial_data.contains('\n')) {
         int left = serial_data.indexOf('\n') + 1;
@@ -223,9 +218,7 @@ void QuadrotorJoystick::serialTX(QString s) {
 
 //    qWarning("checksum: %d", checksum);
 
-    if(!emergenciaSTOP)
-        port->write(s.toAscii());
-    else
+    if(emergenciaSTOP)
         qWarning("STOP!!");
 }
 
@@ -412,4 +405,16 @@ void QuadrotorJoystick::on_spinBox_I_Max_2_valueChanged(int value)
 void QuadrotorJoystick::on_horizontalSlider_I_Max_2_valueChanged(int value)
 {
     ui->spinBox_I_Max_2->setValue(value);
+}
+
+void QuadrotorJoystick::on_pushButton_send_l_clicked()
+{
+    rayaairbot->send('l', "Este es el comando l");
+
+}
+
+void QuadrotorJoystick::on_pushButton_send_s_clicked()
+{
+    rayaairbot->send('s', "Este es el comando s");
+
 }

@@ -8,58 +8,38 @@
 RayaAirBot::RayaAirBot(QObject *parent)
  : QObject(parent)
 {
+ tcpSocket = new QTcpSocket;
 
- tcpServer = new QTcpServer(this);
- if (!tcpServer->listen(QHostAddress::Any, 4000)) {
-     qDebug() << tr("Unable to start the server: %1.").arg(tcpServer->errorString());
-     return;
- }
+ connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+ connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(displayError(QAbstractSocket::SocketError)));
+ connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(reconnect()));
 
- qDebug() << tr("The server is running on port %1.").arg(tcpServer->serverPort());
+ connect(this, SIGNAL(newCommand(quint8,QString)), this, SLOT(newCommandProcess(quint8,QString)));
 
- connect(tcpServer, SIGNAL(newConnection()), this, SLOT(newConnection()));
- blockSize = 0;
+ reconnect();
+
 }
 
-void RayaAirBot::timeout()
-{
+void RayaAirBot::reconnect() {
+    blockSize = 0;
+    tcpSocket->abort();
+    tcpSocket->connectToHost("localhost", 4000);
+
+}
+
+void RayaAirBot::send(quint8 comando, QString s) {
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
 
     out << (quint16)0;
-    out << QString("Hola mundo\n");
+    out << (quint8)comando;
+    out << s;
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
 
     tcpSocket->write(block);
 
-}
-void RayaAirBot::newConnection()
-{
-    tcpSocket = tcpServer->nextPendingConnection();
-
-    qDebug() << "Nueva conexion";
-
-    connect(tcpSocket, SIGNAL(disconnected()), tcpSocket, SLOT(deleteLater()));
-
-    connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(readyRead()));
-    connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(displayError(QAbstractSocket::SocketError)));
-
-    connect(this, SIGNAL(newCommand(quint8,QString)), this, SLOT(newCommandProcess(quint8,QString)));
-
-    QTimer * timer = new QTimer;
-    connect(timer,SIGNAL(timeout()), this,SLOT(timeout()));
-    connect(tcpSocket, SIGNAL(disconnected()), timer, SLOT(deleteLater()));
-    timer->start(500);
-
-    qDebug() << "timer iniciado";
-
-    /*
-
-
- clientConnection->disconnectFromHost();
- */
 }
 
 void RayaAirBot::newCommandProcess(quint8 comando, QString s) {

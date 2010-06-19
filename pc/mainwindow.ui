@@ -19,6 +19,20 @@
      <widget class="QWidget" name="widget_8" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
+        <widget class="QPushButton" name="pushButton_send_l">
+         <property name="text">
+          <string>Send l</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_send_s">
+         <property name="text">
+          <string>Send s</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer_2">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
