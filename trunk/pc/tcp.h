@@ -1,15 +1,15 @@
-#ifndef RAYAAIRBOT_H
-#define RAYAAIRBOT_H
+#ifndef TCP_H
+#define TCP_H
 
 #include <QObject>
 #include <QtNetwork>
 
- class RayaAirBot : public QObject
+ class Tcp : public QObject
  {
      Q_OBJECT
 
  public:
-     RayaAirBot(QObject *parent = 0);
+     Tcp(QObject *parent = 0);
 
  public slots:
      void send(quint8 comando, QString s);

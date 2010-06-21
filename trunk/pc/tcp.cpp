@@ -23,7 +23,7 @@ RayaAirBot::RayaAirBot(QObject *parent)
 void RayaAirBot::reconnect() {
     blockSize = 0;
     tcpSocket->abort();
-    tcpSocket->connectToHost("localhost", 4000);
+    tcpSocket->connectToHost("192.168.11.10", 4000);
 
 }
 

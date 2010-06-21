@@ -45,11 +45,11 @@ int main(void)
     // opened for write goes to stdout. So u0 is stdin, stdout, and stderr
 
 #if defined( __AVR_LIBC_VERSION__ )
-//    u0 = fdevopen( UART0_PutCharStdio, UART0_GetCharStdio );
-    u1 = fdevopen( UART1_PutCharStdio, UART1_GetCharStdio );
+    u0 = fdevopen( UART0_PutCharStdio, UART0_GetCharStdio );
+//    u1 = fdevopen( UART1_PutCharStdio, UART1_GetCharStdio );
 #else
-//    u0 = fdevopen( UART0_PutCharStdio, UART0_GetCharStdio, 0 );
-    u1 = fdevopen( UART1_PutCharStdio, UART1_GetCharStdio, 0 );
+    u0 = fdevopen( UART0_PutCharStdio, UART0_GetCharStdio, 0 );
+//    u1 = fdevopen( UART1_PutCharStdio, UART1_GetCharStdio, 0 );
 #endif
 
     printf( "*****\n" );
@@ -100,7 +100,7 @@ int main(void)
             }
         }
 */
-//        printf("%d %d %d %d %d %d %d\n", gyro[0], gyro[1], accelerometer[0], accelerometer[1], accelerometer[2], angle[0], angle[1]);
+        printf("%d %d %d %d %d %d %d\n", gyro[0], gyro[1], accelerometer[0], accelerometer[1], accelerometer[2], angle[0], angle[1]);
 
         for ( i = 0; i < 2; i++ ) 
         {
