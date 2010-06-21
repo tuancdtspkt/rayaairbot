@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QtNetwork>
+#include "tcp.h"
+#include "serial.h"
 
  class RayaAirBot : public QObject
  {
@@ -12,23 +14,17 @@
      RayaAirBot(QObject *parent = 0);
 
  public slots:
-     void newCommandFromSerial(QString s);
-     void send(quint8 comando, QString s);
 
  private slots:
-     void newConnection();
-     void readyRead();
-     void displayError(QAbstractSocket::SocketError socketError);
-     void newCommandProcess(quint8 comando, QString s);
+     void newCommandFromSerial(QString s);
+     void newCommandFromTcpProcess(quint8 comando, QString s);
 
  signals:
-     void newCommand(quint8 comando, QString s);
      void newCommandToSerial(QString s);
 
  private:
-     QTcpServer *tcpServer;
-     QTcpSocket *tcpSocket;
-     quint16 blockSize;
+     Tcp *tcp;
+     Serial *serial;
 
  };
 
