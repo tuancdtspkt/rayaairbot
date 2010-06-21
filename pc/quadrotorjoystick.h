@@ -16,12 +16,10 @@ namespace Ui {
 class QuadrotorJoystick : public QMainWindow {
 Q_OBJECT
 public:
-    QuadrotorJoystick(int joy_dev_ = 0, QString serial_dev_ = "/dev/ttyUSB0", QWidget *parent = 0);
+    QuadrotorJoystick(int joy_dev_ = 0, QWidget *parent = 0);
     ~QuadrotorJoystick();
     QJoystick *joy;
     int joy_dev;
-    QString serial_dev;
-    QString serial_data;
 
     RayaAirBot *rayaairbot;
 
@@ -34,8 +32,6 @@ protected:
 public slots:
     void axisValueChanged(int axis, int value);
     void buttonValueChanged(int boton, bool b);
-    void serialRX();
-    void serialTX(QString s);
     void setEmergenciaSTOP(bool b);
 
 

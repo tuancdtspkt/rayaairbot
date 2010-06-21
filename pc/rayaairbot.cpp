@@ -44,8 +44,8 @@ void RayaAirBot::send(quint8 comando, QString s) {
 
 void RayaAirBot::newCommandProcess(quint8 comando, QString s) {
     switch(comando) {
-    case 's': qDebug("s"); qDebug(s.toAscii().data()); break;
-    case 'l': qDebug("l"); qDebug(s.toAscii().data()); break;
+    case 's': qDebug() << "s" << s; break;
+    case 'l': qDebug() << "l" << s; break;
     default: break;
     }
 }
@@ -87,6 +87,7 @@ void RayaAirBot::displayError(QAbstractSocket::SocketError socketError)
          break;
      case QAbstractSocket::ConnectionRefusedError:
          qDebug() << tr("The connection was refused by the peer. Make sure the fortune server is running, and check that the host name and port settings are correct.");
+         exit(1);
          break;
      default:
          qDebug() << tr("The following error occurred: %1.").arg(tcpSocket->errorString());
