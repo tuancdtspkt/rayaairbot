@@ -76,6 +76,8 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
     u[1] = joystick[1];
     u[2] = joystick[2];
     u[3] = joystick[3];
+    u[2] = 0;
+    u[1] = 0;
 
 
     if(emergenciaSTOP) {
