@@ -30,14 +30,101 @@ int16_t joystick[ 4 ] = {0,0,0,0};
 
 #define N_DATOS 20
 
+void commandos(uint8_t ch) {
+    static uint8_t buffer[80] = "";
+    static uint8_t index_buffer = 0;
+    uint8_t comando;
+    uint8_t *argumentos;
+    uint8_t argumentos_size;
+
+    if(ch != '#') {
+        buffer[index_buffer++] = ch;
+    } else { // llego un comando nuevo
+        uint8_t k;
+        uint8_t checksum=0;
+
+        // faltan argumentos
+        if(index_buffer <= 2) {
+       	    index_buffer = 0;
+            printf("!\n");
+            return;
+        }
+
+        comando = buffer[0];
+        argumentos = buffer + 1; // quitando el caracter que indica el comando
+        argumentos_size = index_buffer - 1; // sacango el checksum
+        index_buffer = 0;
+        
+        // calculando checksum
+        checksum=comando;
+        for(k=0; k < argumentos_size; k++) {
+            checksum += argumentos[k];
+        }
+
+        // checkeando checksum
+        if(checksum != argumentos[argumentos_size]) {
+            printf("!!\n");
+            return;
+        }
+
+        // Procesando comandos
+        if (( comando == 'c' )) {
+            if(argumentos_size != 3) {
+                printf("!!!\n");
+                return;
+            }
+            //argumentos[0] -> axis
+            //argumentos[1] -> value1
+            //argumentos[2] -> value2
+            if(!(0 <= argumentos[0] && argumentos[0] <= 3)) {
+                printf("!!!!\n");
+                return;
+            }
+            int16_t value = (argumentos[1] << 8) | argumentos[2];
+            joystick[argumentos[0]] = value;
+//                    printf("joy[%d]=%d\n", argumentos[0], value);
+        } else if((comando == 's')) {
+            //argumentos[0] -> axis
+            //argumentos[1] -> constant
+            //argumentos[2] -> value1
+            //argumentos[3] -> value2
+            if(!(0 <= argumentos[0] && argumentos[0] <= 1)) return;
+            int16_t value = (argumentos[2] << 8) | argumentos[3];
+
+            if(value<0) return;
+
+            if((argumentos[1] == 'P')) {
+                pid[argumentos[0]].P = value;
+            } else if((argumentos[1] == 'I')) {
+                pid[argumentos[0]].I = value;
+            } else if((argumentos[1] == 'D')) {
+                pid[argumentos[0]].D = value;
+            } else if((argumentos[1] == 'W')) {
+                pid[argumentos[0]].windUpGuard = value;
+            }
+        } else if((comando == 'z')) {
+           zeroIntegralError();
+        } else if((comando == 'S')) {
+            if(argumentos[0] == 1) {
+                emergenciaSTOP = 1;
+                printf("STOP!\n");
+            } else if(argumentos[0] == 0) {
+                emergenciaSTOP = 0;
+                printf("START!\n");
+            }
+        } /*else {
+            printf("Error: %c?\n", comando);
+        }*/
+    }
+}
+
+
 int main(void)
 {
     int     i;
     int     led = 0;
     FILE   *u0;
     FILE   *u1;
-    uint16_t datos[8][N_DATOS];
-    uint8_t datos_periodo=0;
 
     InitHardware();
 
@@ -45,12 +132,15 @@ int main(void)
     // opened for write goes to stdout. So u0 is stdin, stdout, and stderr
 
 #if defined( __AVR_LIBC_VERSION__ )
-    u0 = fdevopen( UART0_PutCharStdio, UART0_GetCharStdio );
+//    u0 = fdevopen( UART0_PutCharStdio, UART0_GetCharStdio );
+    u0 = fdevopen( UART0_PutCharStdio, 0 );
 //    u1 = fdevopen( UART1_PutCharStdio, UART1_GetCharStdio );
 #else
-    u0 = fdevopen( UART0_PutCharStdio, UART0_GetCharStdio, 0 );
+//    u0 = fdevopen( UART0_PutCharStdio, UART0_GetCharStdio, 0 );
+    u0 = fdevopen( UART0_PutCharStdio, 0, 0 );
 //    u1 = fdevopen( UART1_PutCharStdio, UART1_GetCharStdio, 0 );
 #endif
+    UART0_SetRxHandler(commandos);
 
     printf( "*****\n" );
     printf( "***** Quadrotor program\n" );
@@ -60,132 +150,24 @@ int main(void)
     InitAccelerometer();
     InitMotors();
 
-    while( 1 )
-    {
-        // Turn all of the LEDs off
+    while(1) {
 
-        //LED_OFF( RED );
-        LED_OFF( BLUE );
-        LED_OFF( YELLOW );
-
-        switch ( led )
-        {
-            case    0:  LED_ON( BLUE );     break;
-            case    1:  LED_OFF( BLUE );    break;
+        switch ( led++ ) {
+            case 0:
+                LED_ON( BLUE );
+                break;
+            case 1:
+                LED_OFF( BLUE );
+                led = 0;
+                break;
         }
-
-        if ( ++led >= 2 )
-        {
-            led = 0;
-        }
-
-        // Tick rate is 100/sec so waiting for 100 waits for 1 sec
-//        printf("%d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", gyro[0], gyro[1], u[0], u[1], u[2], u[3], motor[0], motor[1], motor[2], motor[3], joystick[0], joystick[1], joystick[2], joystick[3]); 
-        //printf("%d %d %d %d %d %d\n", gyro[0], u[0], u[3], motor[1], motor[2], joystick[3]);
-/*
-        datos[0][datos_periodo] = gyro[0];
-        datos[1][datos_periodo] = gyro[1];
-        datos[2][datos_periodo] = accelerometer[0];
-        datos[3][datos_periodo] = accelerometer[1];
-        datos[4][datos_periodo] = accelerometer[2];
-        datos[5][datos_periodo] = angle[0];
-        datos[6][datos_periodo] = angle[1];
-        datos[7][datos_periodo] = omega;
-        //printf("%d\n", datos_periodo);
-        if(++datos_periodo % N_DATOS == 0) {
-            datos_periodo = 0;
-            for(i=0; i<N_DATOS; i++) {
-//                printf("%d\n", datos[7][i]);
-//                printf("%d %d %d %d %d %d %d %d\n", datos[0][i], datos[1][i], datos[2][i], datos[3][i], datos[4][i], datos[5][i], datos[6][i], datos[7][i]);
-            }
-        }
-*/
 
         printf("%d %d", gyro[0], gyro[1]);
-	printf(" %d %d %d", accelerometer[0], accelerometer[1], accelerometer[2]);
-	printf(" %d %d\n", angle[0], angle[1]);
+        printf(" %d %d %d", accelerometer[0], accelerometer[1], accelerometer[2]);
+        printf(" %d %d\n", angle[0], angle[1]);
 
-        for ( i = 0; i < 5; i++ ) 
-        {
-            WaitForTimer0Rollover();
-
-            while ( UART0_IsCharAvailable() )
-            {
-                uint8_t ch[10] = "";
-                uint8_t j=0, k;
-                uint8_t checksum=0;
-
-                LED_ON( YELLOW );
-
-                do {
-                    ch[j] = getchar();
-                } while(ch[j++] != '#');
-
-                if(j<=3) {
-                    printf("!\n");
-                    continue;
-                }
-                
-                for(k=0; k<(j-2); k++) {
-                    checksum += ch[k];
-                }
-
-                if(checksum != ch[j-2]) {
-                    printf("!!\n");
-                    continue;
-                }
-
-                if (( ch[0] == 'c' )) {
-                    if(j-3 != 3) {
-                        printf("!!!\n");
-                        continue;
-                    }
-                    //c[1] -> axis
-                    //c[2] -> value1
-                    //c[3] -> value2
-                    if(!(0 <= ch[1] && ch[1] <= 3)) {
-                        printf("!!!!\n");
-                        continue;
-                    }
-                    int16_t value = (ch[2] << 8) | ch[3];
-                    joystick[ch[1]] = value;
-//                    printf("joy[%d]=%d\n", ch[1], value);
-                    continue;
-                } else if((ch[0] == 's')) {
-                    //c[1] -> axis
-                    //c[2] -> constant
-                    //c[3] -> value1
-                    //c[4] -> value2
-                    if(!(0 <= ch[1] && ch[1] <= 1)) continue;
-                    int16_t value = (ch[3] << 8) | ch[4];
-
-                    if(value<0) continue;
-
-                    if((ch[2] == 'P')) {
-                        pid[ch[1]].P = value;
-                    } else if((ch[2] == 'I')) {
-                        pid[ch[1]].I = value;
-                    } else if((ch[2] == 'D')) {
-                        pid[ch[1]].D = value;
-                    } else if((ch[2] == 'W')) {
-                        pid[ch[1]].windUpGuard = value;
-                    }
-                    continue;
-                } else if((ch[0] == 'z')) {
-                   zeroIntegralError();
-                } else if((ch[0] == 'S')) {
-                    if(ch[1] == 1) {
-                        emergenciaSTOP = 1;
-                        printf("STOP!\n");
-                    } else if(ch[1] == 0) {
-                        emergenciaSTOP = 0;
-                        printf("START!\n");
-                    }
-                } else {
-//                    printf("Error: %c?\n", ch[0]);
-                }
-            }
-
+        for ( i = 0; i < 10; i++ ) { // 10[ms]
+            WaitForTimer0Rollover(); // 1[ms]
         }
     }
 
