@@ -12,14 +12,14 @@ RayaAirBot::RayaAirBot(QObject *parent)
 }
 
 void RayaAirBot::newCommandFromSerial(QString s) {
-    qDebug() << "Serial entrante: " << s;
+//    qDebug() << "Serial entrante: " << s;
     tcp->newCommandToTCP('s', s);
 }
 
 void RayaAirBot::newCommandFromTcpProcess(quint8 comando, QString s) {
     switch(comando) {
     case 's':
-        qDebug() << "Serial saliente: " << s;
+//        qDebug() << "Serial saliente: " << s;
         serial->newCommandToSerial(s);
         break;
     default:

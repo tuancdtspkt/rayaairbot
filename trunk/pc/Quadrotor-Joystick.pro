@@ -11,11 +11,11 @@ INCLUDEDIR = .
 HEADERS = quadrotorjoystick.h \
     data_plot.h \
     data_plot2.h \
-    rayaairbot.h
+    tcp.h
 SOURCES = quadrotorjoystick.cpp \
     data_plot.cpp \
     data_plot2.cpp \
-    rayaairbot.cpp
+    tcp.cpp
 FORMS += mainwindow.ui
 LIBS += -lqwt-qt4
 macx:LIBS += -framework \

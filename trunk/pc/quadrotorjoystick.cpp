@@ -32,20 +32,23 @@ QuadrotorJoystick::QuadrotorJoystick(int joy_dev_, QWidget *parent) :
     joy_dev = joy_dev_;
 
     joy = new QJoystick();
-/*
+
     QStringList joylist = joy->joyList();
     for(int i=0; i<joylist.size();i++) {
         qWarning("Joystick %d, %s\n", i, joylist.at(i).toAscii().data() );
-    }*/
-/*
+    }
+
     joy->open(joy_dev);
 
     connect(joy, SIGNAL(axisValueChanged(int,int)), this, SLOT(axisValueChanged(int,int)));
     connect(joy, SIGNAL(buttonValueChanged(int,bool)), this, SLOT(buttonValueChanged(int,bool)));
-*/
-//    QTimer::singleShot(100, this, SLOT(initValues()));
 
-    rayaairbot =  new RayaAirBot;
+    //QTimer::singleShot(100, this, SLOT(initValues()));
+
+    tcp =  new Tcp;
+
+    connect(tcp, SIGNAL(newCommand(quint8,QString)), this, SLOT(newCommandProcess(quint8,QString)));
+
 
 
 }
@@ -72,13 +75,44 @@ void QuadrotorJoystick::initValues(void) {
     on_spinBox_I_Max_2_valueChanged(ui->spinBox_I_Max_2->value());
 }
 
-/*
-DataPlot *dataplot = qobject_cast<DataPlot *>(ui->widget_plot);
+
+void QuadrotorJoystick::newCommandProcess(quint8 comando, QString s) {
+    QList<QString> dato;
+    DataPlot *dataplot;
+    DataPlot2 *dataplot2;
+
+    switch(comando) {
+    case 's':
+        //        qWarning() << dato[0].toInt();
+        //        qWarning() << "serial: " << s;
+
+        dato = s.split(' ');
+
+        if(dato.size() == 7) {
+            dataplot = qobject_cast<DataPlot *>(ui->widget_plot);
             if (dataplot) {
-                ui->widget_plot->addData(0, l[1].toInt());
+                ui->widget_plot->addData(dato[0].toInt(), dato[1].toInt());
+                ui->widget_plot->addData(dato[0].toInt(), dato[1].toInt());
             }
-            //ui->label_M0->setText(l[0]);
-*/
+            dataplot2 = qobject_cast<DataPlot2 *>(ui->widget_plot_2);
+            if (dataplot2) {
+                ui->widget_plot_2->addData(dato[2].toInt(), dato[3].toInt(), dato[4].toInt());
+                ui->widget_plot_2->addData(dato[2].toInt(), dato[3].toInt(), dato[4].toInt());
+            }
+
+    //        ui->label_M0->setText(l[5]);
+    //        ui->label_M0->setText(l[6]);
+        } else {
+            qDebug() << "s: " << s;
+        }
+
+        break;
+    case 'l':
+        qDebug() << "l" << s;
+        break;
+    default: break;
+    }
+}
 
 void QuadrotorJoystick::axisValueChanged(int axis, int value) {
     QString s;
@@ -108,9 +142,9 @@ void QuadrotorJoystick::axisValueChanged(int axis, int value) {
 
 //    qWarning("enviando: axis: %d value1: %u value2: %u value: %d", axis, (value>>8)&0x00FF, value&0x00FF, value);
     qWarning("enviando: axis: %d value: %d", axis, value);
-//    serialTX(s);
-//    if(value==0) // reenviando por si no llega bien el 0 que es mas importante que el resto
-//        serialTX(s);
+    serialTX(s);
+    if(value==0) // reenviando por si no llega bien el 0 que es mas importante que el resto
+        serialTX(s);
 
 }
 
@@ -124,7 +158,7 @@ void QuadrotorJoystick::on_spinBox_P_valueChanged(int value)
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
     qWarning("enviando: P0: X value: %d", value);
-//    serialTX(s);
+    serialTX(s);
 }
 
 void QuadrotorJoystick::on_horizontalSlider_P_valueChanged(int value)
@@ -142,7 +176,7 @@ void QuadrotorJoystick::on_spinBox_I_valueChanged(int value)
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
     qWarning("enviando: I0: X value: %d", value);
-//    serialTX(s);
+    serialTX(s);
 }
 
 void QuadrotorJoystick::on_horizontalSlider_I_valueChanged(int value)
@@ -161,7 +195,7 @@ void QuadrotorJoystick::on_spinBox_D_valueChanged(int value)
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
     qWarning("enviando: D0: X value: %d", value);
-//    serialTX(s);
+    serialTX(s);
 }
 
 void QuadrotorJoystick::on_horizontalSlider_D_valueChanged(int value)
@@ -179,7 +213,7 @@ void QuadrotorJoystick::on_spinBox_I_Max_valueChanged(int value)
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
     qWarning("enviando: M0: X value: %d", value);
-//    serialTX(s);
+    serialTX(s);
 }
 
 void QuadrotorJoystick::on_horizontalSlider_I_Max_valueChanged(int value)
@@ -207,19 +241,13 @@ void QuadrotorJoystick::setEmergenciaSTOP(bool b)
     if(b) {
         qWarning("Stop");
         s += (char)1;
-//        serialTX(s);
-//        serialTX(s);
-//        serialTX(s);
-//        serialTX(s);
+        serialTX(s);
         emergenciaSTOP = 1;
     } else {
         qWarning("Start");
         s += (char)0;
         emergenciaSTOP = 0;
-//        serialTX(s);
-//        serialTX(s);
-//        serialTX(s);
-//        serialTX(s);
+        serialTX(s);
     }
 }
 
@@ -237,7 +265,7 @@ void QuadrotorJoystick::on_spinBox_P_2_valueChanged(int value)
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
     qWarning("enviando: P1: X value: %d", value);
- //   serialTX(s);
+    serialTX(s);
 }
 
 void QuadrotorJoystick::on_horizontalSlider_P_2_valueChanged(int value)
@@ -255,7 +283,7 @@ void QuadrotorJoystick::on_spinBox_I_2_valueChanged(int value)
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
     qWarning("enviando: I1: X value: %d", value);
-//    serialTX(s);
+    serialTX(s);
 }
 
 void QuadrotorJoystick::on_horizontalSlider_I_2_valueChanged(int value)
@@ -273,7 +301,7 @@ void QuadrotorJoystick::on_spinBox_D_2_valueChanged(int value)
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
     qWarning("enviando: D1: X value: %d", value);
-//    serialTX(s);
+    serialTX(s);
 }
 
 void QuadrotorJoystick::on_horizontalSlider_D_2_valueChanged(int value)
@@ -291,7 +319,7 @@ void QuadrotorJoystick::on_spinBox_I_Max_2_valueChanged(int value)
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
     qWarning("enviando: M1: X value: %d", value);
-//    serialTX(s);
+    serialTX(s);
 }
 
 void QuadrotorJoystick::on_horizontalSlider_I_Max_2_valueChanged(int value)
@@ -301,12 +329,17 @@ void QuadrotorJoystick::on_horizontalSlider_I_Max_2_valueChanged(int value)
 
 void QuadrotorJoystick::on_pushButton_send_l_clicked()
 {
-    rayaairbot->send('l', "Este es el comando l");
+    tcp->send('l', "Este es el comando l");
 
 }
 
 void QuadrotorJoystick::on_pushButton_send_s_clicked()
 {
-    rayaairbot->send('s', "Este es el comando s");
+    tcp->send('s', "Este es el comando s");
+
+}
+
+void QuadrotorJoystick::serialTX(QString s) {
+    tcp->send('s', s);
 
 }
