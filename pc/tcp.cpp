@@ -3,9 +3,9 @@
 #include <QtNetwork>
 #include <QTimer>
 
-#include "rayaairbot.h"
+#include "tcp.h"
 
-RayaAirBot::RayaAirBot(QObject *parent)
+Tcp::Tcp(QObject *parent)
  : QObject(parent)
 {
  tcpSocket = new QTcpSocket;
@@ -14,20 +14,18 @@ RayaAirBot::RayaAirBot(QObject *parent)
  connect(tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(displayError(QAbstractSocket::SocketError)));
  connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(reconnect()));
 
- connect(this, SIGNAL(newCommand(quint8,QString)), this, SLOT(newCommandProcess(quint8,QString)));
-
  reconnect();
 
 }
 
-void RayaAirBot::reconnect() {
+void Tcp::reconnect() {
     blockSize = 0;
     tcpSocket->abort();
     tcpSocket->connectToHost("192.168.11.10", 4000);
 
 }
 
-void RayaAirBot::send(quint8 comando, QString s) {
+void Tcp::send(quint8 comando, QString s) {
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_4_0);
@@ -42,42 +40,34 @@ void RayaAirBot::send(quint8 comando, QString s) {
 
 }
 
-void RayaAirBot::newCommandProcess(quint8 comando, QString s) {
-    switch(comando) {
-    case 's': qDebug() << "s" << s; break;
-    case 'l': qDebug() << "l" << s; break;
-    default: break;
-    }
-}
-
-
-void RayaAirBot::readyRead()
+void Tcp::readyRead()
  {
      QDataStream in(tcpSocket);
      in.setVersion(QDataStream::Qt_4_0);
 
-     if (blockSize == 0) {
-         if (tcpSocket->bytesAvailable() < (int)sizeof(quint16))
+     while(1) {
+         if (blockSize == 0) {
+             if (tcpSocket->bytesAvailable() < (int)sizeof(quint16))
+                 return;
+
+             in >> blockSize;
+         }
+
+         if (tcpSocket->bytesAvailable() < blockSize)
              return;
 
-         in >> blockSize;
+         quint8 comando;
+         in >> comando;
+         QString s;
+         in >> s;
+
+         emit newCommand(comando, s);
+
+         blockSize = 0;
      }
-
-     if (tcpSocket->bytesAvailable() < blockSize)
-         return;
-
-     quint8 comando;
-     in >> comando;
-     QString s;
-     in >> s;
-
-     emit newCommand(comando, s);
-
-     blockSize = 0;
-
  }
 
-void RayaAirBot::displayError(QAbstractSocket::SocketError socketError)
+void Tcp::displayError(QAbstractSocket::SocketError socketError)
  {
      switch (socketError) {
      case QAbstractSocket::RemoteHostClosedError:

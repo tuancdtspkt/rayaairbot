@@ -100,13 +100,16 @@ int main(void)
             }
         }
 */
-        printf("%d %d %d %d %d %d %d\n", gyro[0], gyro[1], accelerometer[0], accelerometer[1], accelerometer[2], angle[0], angle[1]);
 
-        for ( i = 0; i < 2; i++ ) 
+        printf("%d %d", gyro[0], gyro[1]);
+	printf(" %d %d %d", accelerometer[0], accelerometer[1], accelerometer[2]);
+	printf(" %d %d\n", angle[0], angle[1]);
+
+        for ( i = 0; i < 5; i++ ) 
         {
             WaitForTimer0Rollover();
 
-            while ( UART1_IsCharAvailable() )
+            while ( UART0_IsCharAvailable() )
             {
                 uint8_t ch[10] = "";
                 uint8_t j=0, k;
@@ -173,13 +176,13 @@ int main(void)
                 } else if((ch[0] == 'S')) {
                     if(ch[1] == 1) {
                         emergenciaSTOP = 1;
-                    //    printf("STOP!\n");
+                        printf("STOP!\n");
                     } else if(ch[1] == 0) {
                         emergenciaSTOP = 0;
-                    //    printf("START!\n");
+                        printf("START!\n");
                     }
                 } else {
-                    //printf("Error: %c?\n", ch[0]);
+//                    printf("Error: %c?\n", ch[0]);
                 }
             }
 

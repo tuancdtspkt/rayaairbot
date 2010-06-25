@@ -17,7 +17,6 @@
  private slots:
      void readyRead();
      void displayError(QAbstractSocket::SocketError socketError);
-     void newCommandProcess(quint8 comando, QString s);
      void reconnect();
 
  signals:

@@ -7,7 +7,7 @@
 #include <QStringList>
 #include <QByteArray>
 #include "qjoystick.h"
-#include "rayaairbot.h"
+#include "tcp.h"
 
 namespace Ui {
     class MainWindow;
@@ -21,9 +21,7 @@ public:
     QJoystick *joy;
     int joy_dev;
 
-    RayaAirBot *rayaairbot;
-
-
+    Tcp *tcp;
 
 //signals:
 protected:
@@ -38,12 +36,15 @@ public slots:
 private:
     Ui::MainWindow *ui;
     bool emergenciaSTOP;
+    void serialTX(QString s);
 
 private slots:
     void on_pushButton_send_s_clicked();
     void on_pushButton_send_l_clicked();
     void on_pushButton_clicked();
     void initValues(void);
+
+    void newCommandProcess(quint8 comando, QString s);
 
     void on_horizontalSlider_I_Max_valueChanged(int value);
     void on_spinBox_I_Max_valueChanged(int );
