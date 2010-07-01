@@ -37,6 +37,8 @@ void Tcp::send(quint8 comando, QString s) {
     out << (quint16)(block.size() - sizeof(quint16));
 
     tcpSocket->write(block);
+    tcpSocket->write(block);
+    tcpSocket->write(block);
 
 }
 

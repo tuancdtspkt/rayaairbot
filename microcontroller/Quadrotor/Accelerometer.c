@@ -22,8 +22,11 @@ void GetAccelerometer() {
 
     // Ajustando en comparacion al voltaje de referencia 
     for(i=0; i<3; i++) {
-        accelerometer_double[i] += (double)(gADC[i] - accelerometer_double[i])/2.0;
-        accelerometer[i] = accelerometer_double[i];
+//        accelerometer_double[i] += (double)(gADC[i] - accelerometer_double[i])/2.0;
+//        accelerometer[i] = accelerometer_double[i];
+
+	accelerometer[i] = gADC[i] >> 2;
+
 //        gADC_ant[i] = gADC[i];
 //        accelerometer[i] = (1-A)*gADC[i] + A*accelerometer_anterior[i];
     //    accelerometer[i] = (accelerometer[i]*9+gADC[i])/10;
@@ -32,9 +35,11 @@ void GetAccelerometer() {
     }
 
     
-    //angle[0] = atan2(accelerometer[2], accelerometer[1])*1800/M_PI+900;
-    angle[0] = ((double)atan2(accelerometer[2], accelerometer[1])+(double)1.5708)*(double)100.0;
-    angle[1] = atan2(accelerometer[2], accelerometer[0])*1800/M_PI+900;
+//    angle[0] = atan2(accelerometer[2], accelerometer[1])*1800/M_PI+900;
+    angle[0] = (int)(atan2(accelerometer[2], accelerometer[1])*57.296+90.00);
+    angle[1] = (int)(atan2(accelerometer[2], accelerometer[0])*57.296+90.00);
+    //angle[0] = ((double)atan2(accelerometer[2], accelerometer[1])+(double)1.5708)*(double)100.0;
+    //angle[1] = atan2(accelerometer[2], accelerometer[0])*1800/M_PI+900;
 
     return;
 }
