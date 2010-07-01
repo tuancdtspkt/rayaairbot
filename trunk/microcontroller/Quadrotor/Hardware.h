@@ -172,17 +172,19 @@
 //--------------------------------------------------------------------------
 // UART settings
 
-#define UART0_BAUD_RATE     57600
+//#define UART0_BAUD_RATE     9600
+#define UART0_BAUD_RATE     115200
+//#define UART0_BAUD_RATE     230400
 #define UART1_BAUD_RATE     9600
 
 #define UART_DATA_BIT_8  (( 1 << UCSZ1 ) | ( 1 << UCSZ0 ))
 #define UART_PARITY_NONE (( 0 << UPM1 )  | ( 0 << UPM0 ))
 #define UART_STOP_BIT_1  ( 1 << USBS )
 
-#define UBRR0_INIT   (( CFG_CPU_CLOCK / 16 / UART0_BAUD_RATE ) - 1 )
+#define UBRR0_INIT   (( CFG_CPU_CLOCK / 8 / UART0_BAUD_RATE ) - 1 )
 #define UBRR1_INIT   (( CFG_CPU_CLOCK / 16 / UART1_BAUD_RATE ) - 1 )
 
-#define UCSR0A_INIT  0
+#define UCSR0A_INIT  (1<<U2X0)
 #define UCSR0B_INIT  (( 1 << RXCIE ) | ( 1 << RXEN ) | ( 1 << TXEN ))
 #define UCSR0C_INIT  ( UART_DATA_BIT_8 | UART_PARITY_NONE | UART_STOP_BIT_1 )
 

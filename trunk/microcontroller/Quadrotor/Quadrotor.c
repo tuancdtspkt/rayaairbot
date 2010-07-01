@@ -44,7 +44,7 @@ void commandos(uint8_t ch) {
         uint8_t checksum=0;
 
         // faltan argumentos
-        if(index_buffer <= 2) {
+        if(index_buffer < 2) {
        	    index_buffer = 0;
             printf("!\n");
             return;
@@ -52,8 +52,11 @@ void commandos(uint8_t ch) {
 
         comando = buffer[0];
         argumentos = buffer + 1; // quitando el caracter que indica el comando
-        argumentos_size = index_buffer - 1; // sacango el checksum
+        argumentos_size = index_buffer - 2; // sacango el checksum
         index_buffer = 0;
+
+//printf("comando: %c argumentos_size: %d\n", comando, argumentos_size);
+//printf("comando: %c a1: %d ckechsum: %d\n", comando, argumentos[0]);
         
         // calculando checksum
         checksum=comando;
@@ -81,6 +84,8 @@ void commandos(uint8_t ch) {
                 return;
             }
             int16_t value = (argumentos[1] << 8) | argumentos[2];
+            if(argumentos[0]!=3)
+	    	value >>= 4;
             joystick[argumentos[0]] = value;
 //                    printf("joy[%d]=%d\n", argumentos[0], value);
         } else if((comando == 's')) {
@@ -162,11 +167,12 @@ int main(void)
                 break;
         }
 
-        printf("%d %d", gyro[0], gyro[1]);
-        printf(" %d %d %d", accelerometer[0], accelerometer[1], accelerometer[2]);
-        printf(" %d %d\n", angle[0], angle[1]);
 
-        for ( i = 0; i < 10; i++ ) { // 10[ms]
+        printf("%d %d", angle[0], angle[1]);
+        printf(" %d %d", gyro[0], gyro[1]);
+        printf(" %d %d %d\n", accelerometer[0], accelerometer[1], accelerometer[2]);
+
+        for ( i = 0; i < 2; i++ ) { // 2[ms]
             WaitForTimer0Rollover(); // 1[ms]
         }
     }

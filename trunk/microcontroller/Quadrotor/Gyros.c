@@ -17,9 +17,17 @@ void GetGyros() {
     }
 
     // Ajustando en comparacion al voltaje de referencia 
-    for(i=0; i<2; i++) {
-        gyro[ i ] = ((int16_t)gADC[ i ] - (int16_t)gADC[ 2 ] + 10);
-    }
+//    for(i=0; i<2; i++) {
+//        gyro[ i ] = ((int16_t)gADC[ i ] - (int16_t)gADC[ 2 ] + 10);
+//    }
+    gyro[ 0 ] = ((int16_t)gADC[ 0 ] - (int16_t)gADC[ 2 ] + 13);
+    gyro[ 1 ] = ((int16_t)gADC[ 1 ] - (int16_t)gADC[ 2 ] + 16);
     
+    gyro[ 0 ] >>= 1;
+    gyro[ 1 ] >>= 1;
+
+    gyro[ 0 ] >>= 1;
+    gyro[ 1 ] >>= 1;
+
     return;
 }

@@ -242,11 +242,19 @@ void QuadrotorJoystick::setEmergenciaSTOP(bool b)
         qWarning("Stop");
         s += (char)1;
         serialTX(s);
+        serialTX(s);
+        serialTX(s);
+        serialTX(s);
+        serialTX(s);
         emergenciaSTOP = 1;
     } else {
         qWarning("Start");
         s += (char)0;
         emergenciaSTOP = 0;
+        serialTX(s);
+        serialTX(s);
+        serialTX(s);
+        serialTX(s);
         serialTX(s);
     }
 }
@@ -265,6 +273,9 @@ void QuadrotorJoystick::on_spinBox_P_2_valueChanged(int value)
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
     qWarning("enviando: P1: X value: %d", value);
+    serialTX(s);
+    serialTX(s);
+    serialTX(s);
     serialTX(s);
 }
 
