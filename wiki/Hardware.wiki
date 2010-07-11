@@ -1,13 +1,23 @@
 = Motors =
 
-GPMG4590 - http://www.mirax.cl/detalles.php?codigo=68689
+4x *GPMG4590* - http://www.mirax.cl/detalles.php?codigo=68689
 
 
 = Controlers =
 
-Sidewinder Micro - http://www.amazon.com/Sidewinder-Micro-18-Sport-ESC/dp/B0015TWQ48/ref=sr_1_1?ie=UTF8&s=toys-and-games&qid=1278866903&sr=8-1
-Castle Link USB Programmer Adapter - http://www.amazon.com/Castle-Link-USB-Programmer-Adapter/dp/B000BOG8V0/ref=pd_bxgy_t_img_b
+4x *Sidewinder Micro* - http://www.amazon.com/Sidewinder-Micro-18-Sport-ESC/dp/B0015TWQ48/ref=sr_1_1?ie=UTF8&s=toys-and-games&qid=1278866903&sr=8-1
 
+1x *Castle Link USB Programmer Adapter* - http://www.amazon.com/Castle-Link-USB-Programmer-Adapter/dp/B000BOG8V0/ref=pd_bxgy_t_img_b
+
+= Electronics =
+
+*Verdex Pro* - http://www.gumstix.com/store/catalog/product_info.php?products_id=209
+
+*Robostix* - http://www.gumstix.com/store/catalog/product_info.php?products_id=139
+
+*Netpro-vx* - http://www.gumstix.com/store/catalog/product_info.php?products_id=207
+
+*Wifi module EU* - http://www.gumstix.com/store/catalog/product_info.php?cPath=31&products_id=192
 
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_
