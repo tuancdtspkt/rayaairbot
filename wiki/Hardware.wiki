@@ -19,7 +19,6 @@
 
 *Wifi module EU* - http://www.gumstix.com/store/catalog/product_info.php?cPath=31&products_id=192
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+*Gyro Breakout Board - LPR530AL Dual 300°/s* - http://www.sparkfun.com/commerce/product_info.php?products_id=9413
+
+*Triple Axis Accelerometer - ADXL335* - http://www.olimex.cl/product_info.php?cPath=50_85&products_id=604
