@@ -1,11 +1,13 @@
-#summary One-sentence summary of this page.
+= Motors =
 
-= Introduction =
-
-Add your content here.
+GPMG4590 - http://www.mirax.cl/detalles.php?codigo=68689
 
 
-= Details =
+= Controlers =
+
+Sidewinder Micro - http://www.amazon.com/Sidewinder-Micro-18-Sport-ESC/dp/B0015TWQ48/ref=sr_1_1?ie=UTF8&s=toys-and-games&qid=1278866903&sr=8-1
+Castle Link USB Programmer Adapter - http://www.amazon.com/Castle-Link-USB-Programmer-Adapter/dp/B000BOG8V0/ref=pd_bxgy_t_img_b
+
 
 Add your content here.  Format your content with:
   * Text in *bold* or _italic_
