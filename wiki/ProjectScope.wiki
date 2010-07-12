@@ -1,0 +1,5 @@
+= Project Scope =
+
+The open quadrotor projects I've seen do not have a clean code and that makes it had to follow (if I am wrong please tell me). Usually they don't communicate it with a computer so it is difficult to graphic and to change parameters. This is very helpful for tracking bugs and logging the results for a thesis. 
+
+I just hope I can make a very good hardware and clean code so that others can easily learn and/or fix it and/or put new features with out much work.
