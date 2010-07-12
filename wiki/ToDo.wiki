@@ -1,0 +1,17 @@
+= Features =
+
+ * Wifi communication between gumstix and computer.
+ * Control loop for roll and pich with gyro.
+ * Computer can graphic variables and adjust parameters.
+ * Joystick support.
+
+= To Do Features =
+
+ * Kalman filters for angle measures (accelerometer and gyro).
+ * Fuzzy-PID control on every.
+ * GPS position.
+ * Yaw control.
+ * Navigate in a straight line between two points.
+ * Generates a route avoiding obstacles.
+ * Create a map while exploring around to generate better routes.
+ * Etc.
