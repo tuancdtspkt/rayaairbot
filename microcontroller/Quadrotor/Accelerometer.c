@@ -11,35 +11,43 @@ void InitAccelerometer() {
 
 void GetAccelerometer() {
     static double accelerometer_double[3]={0,0,0};
-    int16_t gADC[3];
+    int16_t gADC[3] = {0,0,0};
     static int16_t gADC_ant[3]={0,0,0};
-    uint8_t i;
+    uint8_t i,j;
 
     // Captura ADC
     for(i=0; i<3; i++) {
-        gADC[i] = a2d_10(i+4) - 341;
+        for(j=0; j<3; j++) {
+            gADC[i] += a2d_10(i+4);
+        }
+	gADC[i] /= 3;
     }
 
-    // Ajustando en comparacion al voltaje de referencia 
+    // Conversion de unidades
+    //
+    // Medicion a V: 2.56/1024 V/bit
+    // Quitando Zero g Bias Level: 1.5 V
+    // mV a g: 0.3 V/g
+    //
+    // g = (ADC*(2.56/1024) - 1.5)/0.3
+    //
+    // Simplificando:
+    // g = ADC/120 - 5
+
+    // Solo necesitamos calcular el angulo asique no necesitamos que este en g
+    // Para representar mejor el numero se multiplica por 120
+    // 
+    // g = ADC - 600
+    //
+    // Este es un valor calculado usando los valores tipicos del datasheet del sensor.
+    // Este valor puede necesitar ajuste pero es una buena aproximacion. 
+
     for(i=0; i<3; i++) {
-//        accelerometer_double[i] += (double)(gADC[i] - accelerometer_double[i])/2.0;
-//        accelerometer[i] = accelerometer_double[i];
-
-	accelerometer[i] = gADC[i] >> 2;
-
-//        gADC_ant[i] = gADC[i];
-//        accelerometer[i] = (1-A)*gADC[i] + A*accelerometer_anterior[i];
-    //    accelerometer[i] = (accelerometer[i]*9+gADC[i])/10;
-//        accelerometer[i] = accelerometer_anterior[i] + (gADC[i] - accelerometer_anterior[i])/50;
-//        accelerometer_anterior[i] = accelerometer[i];
+        accelerometer[i] = gADC[i] - 600;
     }
 
-    
-//    angle[0] = atan2(accelerometer[2], accelerometer[1])*1800/M_PI+900;
-    angle[0] = (int)(atan2(accelerometer[2], accelerometer[1])*57.296+90.00);
-    angle[1] = (int)(atan2(accelerometer[2], accelerometer[0])*57.296+90.00);
-    //angle[0] = ((double)atan2(accelerometer[2], accelerometer[1])+(double)1.5708)*(double)100.0;
-    //angle[1] = atan2(accelerometer[2], accelerometer[0])*1800/M_PI+900;
+    angle[0] = atan((double)accelerometer[1]/(double)accelerometer[2])*100;
+    angle[1] = atan((double)accelerometer[0]/(double)accelerometer[2])*100;
 
     return;
 }

@@ -2,7 +2,7 @@
 #define MOTORS_H
 
 // 20ms
-#define TIMER_PERIOD  5000u
+#define TIMER_PERIOD  6000u
 #define TIMER3_DIV    TIMER3_CLOCK_SEL_DIV_8 // 1, 8, 64, 256, 1024
 #define TIMER1_DIV    TIMER1_CLOCK_SEL_DIV_8 // 1, 8, 64, 256, 1024
 

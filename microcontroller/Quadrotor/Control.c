@@ -7,6 +7,10 @@
 #include "Accelerometer.h"
 #include "Hardware.h"
 #include "Pid.h"
+#include "Fuzzy.h"
+#include "Kalman.h"
+
+float theta = 0;
 
 // gADC[0] -> gyro x
 // gADC[1] -> gyro y
@@ -43,14 +47,19 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
     static uint8_t periodo=0;
 
     //cada 5ms el if es falso
-    if(periodo++%5 != 0) {
+    if(periodo++%3 != 0) {
         return;
     }
     
     GetGyros();
     GetAccelerometer();
 
-        periodo=1;
+
+    state_update(gyro[1]);	// Update gyro measurement
+    theta = kalman_update(angle[0]);
+//    theta = kalman_update(0);
+
+    periodo=1;
 /*
     //cada 50ms ejecuta esto:
     if(periodo%50 == 1) {
@@ -70,14 +79,20 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
     // PID
     u[0] = UpdatePID(&pid[1], omega, gyro[0]);
 */
-    u[0] = UpdatePID(&pid[1], joystick[0], gyro[0]);
+//    u[0] = joystick[1];
+
+//    u[0] = Fuzzy(&fuzzy[0], 0, 0);
+//    u[1] = Fuzzy(&fuzzy[1], 0, 0);
+
+    u[0] = UpdatePID(&pid[0], joystick[1], gyro[0]);
+    u[1] = UpdatePID(&pid[1], joystick[0], gyro[1]);
 
     //u[0] = joystick[0]/10;
-    u[1] = joystick[1];
     u[2] = joystick[2];
     u[3] = joystick[3];
-    u[2] = 0;
-    u[1] = 0;
+
+//    u[2] = 0;
+//    u[0] = 0;
 
 
     if(emergenciaSTOP) {
@@ -88,12 +103,14 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
         LED_ON( RED );
     } else {
         // Rotación de coordenadas + offset PWM
-        motor[0] = u[3] - u[2] - u[1] + MOTORS_MIDDLE;
+        motor[0] = u[3] - u[2] + u[1] + MOTORS_MIDDLE;
         motor[1] = u[3] + u[2] - u[0] + MOTORS_MIDDLE;
         motor[2] = u[3] + u[2] + u[0] + MOTORS_MIDDLE;
-        motor[3] = u[3] - u[2] + u[1] + MOTORS_MIDDLE-200;
-        motor[0]=MOTORS_MIDDLE;
-        motor[3]=MOTORS_MIDDLE;
+        motor[3] = u[3] - u[2] - u[1] + MOTORS_MIDDLE;
+
+//        motor[1]=MOTORS_MIDDLE;
+//        motor[2]=MOTORS_MIDDLE;
+
         LED_OFF( RED );
     }
 

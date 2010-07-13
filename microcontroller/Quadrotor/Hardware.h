@@ -167,7 +167,7 @@
 #define ADMUX_REF_AVCC      (( 0 << REFS1 ) | ( 1 << REFS0 ))
 #define ADMUX_REF_INTERNAL  (( 1 << REFS1 ) | ( 1 << REFS0 ))
 
-#define ADMUX_INIT  ADMUX_REF_AVCC
+#define ADMUX_INIT  ADMUX_REF_INTERNAL
 
 //--------------------------------------------------------------------------
 // UART settings
