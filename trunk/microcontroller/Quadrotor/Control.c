@@ -55,8 +55,8 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
     GetAccelerometer();
 
 
-    state_update(gyro[1]);	// Update gyro measurement
-    theta = kalman_update(angle[0]);
+    KalmanStateUpdate(gyro[0]*CONVERT_TO_RAD_S);	// Update gyro measurement
+    theta = KalmanUpdate(angle[0]);
 //    theta = kalman_update(0);
 
     periodo=1;
