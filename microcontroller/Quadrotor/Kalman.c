@@ -47,7 +47,7 @@
  * 8 bit counter running at CLK/1024 expires.  You will have to
  * change this value if you update at a different rate.
  */
-static float	dt	= 0.05; // 18,500*4/2000000; Prescaler = 4, Oscillator Freq = 8 MHz
+static float	dt	= 0.003; // 3 ¿ms?
 
 
 
@@ -76,7 +76,7 @@ static float	rate;
  * it is a 1x1 matrix that says that we expect 0.3 rad jitter
  * from the accelerometer.
  */
-static float	R_angle	= 100.0;
+static float	R_angle	= 0.3;
 
 
 /*
@@ -84,8 +84,8 @@ static float	R_angle	= 100.0;
  * In this case, it indicates how much we trust the acceleromter
  * relative to the gyros.
  */
-static float	Q_angle	= 0.0001; // 0.001;
-static float	Q_gyro	= 0.0003; // 0.003;
+static float	Q_angle	= 0.001; // 0.001;
+static float	Q_gyro	= 0.003; // 0.003;
 
 
 /*
@@ -127,7 +127,7 @@ static float	Q_gyro	= 0.0003; // 0.003;
  * very little CPU time.
  */
 void
-state_update(
+KalmanStateUpdate(
 	float		q_m	/* Pitch gyro measurement */
 )
 {
@@ -204,7 +204,7 @@ state_update(
  * bias.
  */
 float
-kalman_update(
+KalmanUpdate(
 //	float		ax_m,	/* X acceleration */
 //	float		az_m	/* Z acceleration */
 float angle_m
