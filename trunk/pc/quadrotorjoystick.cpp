@@ -88,20 +88,19 @@ void QuadrotorJoystick::newCommandProcess(quint8 comando, QString s) {
 
         dato = s.split(' ');
 
-        if(dato.size() == 7) {
+        if(dato.size() == 8) {
             dataplot = qobject_cast<DataPlot *>(ui->widget_plot);
             if (dataplot) {
                 ui->widget_plot->addData(dato[0].toInt(), dato[1].toInt());
-                ui->widget_plot->addData(dato[0].toInt(), dato[1].toInt());
+//                ui->widget_plot->addData(dato[0].toInt(), dato[1].toInt());
             }
             dataplot2 = qobject_cast<DataPlot2 *>(ui->widget_plot_2);
             if (dataplot2) {
-                ui->widget_plot_2->addData(dato[2].toInt(), dato[3].toInt(), dato[4].toInt());
-                ui->widget_plot_2->addData(dato[2].toInt(), dato[3].toInt(), dato[4].toInt());
+//                ui->widget_plot_2->addData(dato[2].toInt(), dato[3].toInt(), dato[4].toInt());
+                ui->widget_plot_2->addData(dato[2].toInt(), dato[4].toInt(), dato[7].toInt());
             }
-
-    //        ui->label_M0->setText(l[5]);
-    //        ui->label_M0->setText(l[6]);
+            ui->label_angulo1->setText(dato[5]);
+            ui->label_angulo2->setText(dato[7]);
         } else {
             qDebug() << "s: " << s;
         }
@@ -124,13 +123,13 @@ void QuadrotorJoystick::axisValueChanged(int axis, int value) {
 
     switch(axis) {
     case 0:
-        value = value/10;
+        value = value/20;
         break;
     case 1:
-        value = value/10;
+        value = -1*value/20;
         break;
     case 2:
-        value = value/10;
+        value = value;
         break;
     case 3:
         value = -value;
@@ -243,9 +242,7 @@ void QuadrotorJoystick::setEmergenciaSTOP(bool b)
         s += (char)1;
         serialTX(s);
         serialTX(s);
-        serialTX(s);
-        serialTX(s);
-        serialTX(s);
+
         emergenciaSTOP = 1;
     } else {
         qWarning("Start");
@@ -253,9 +250,7 @@ void QuadrotorJoystick::setEmergenciaSTOP(bool b)
         emergenciaSTOP = 0;
         serialTX(s);
         serialTX(s);
-        serialTX(s);
-        serialTX(s);
-        serialTX(s);
+
     }
 }
 
@@ -273,9 +268,6 @@ void QuadrotorJoystick::on_spinBox_P_2_valueChanged(int value)
     s += (value>>8)&0x00FF;
     s += value&0x00FF;
     qWarning("enviando: P1: X value: %d", value);
-    serialTX(s);
-    serialTX(s);
-    serialTX(s);
     serialTX(s);
 }
 
