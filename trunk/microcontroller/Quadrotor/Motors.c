@@ -2,6 +2,7 @@
 //#include "Hardware.h"
 #include "Timer.h"
 #include "Motors.h"
+#include "Control.h"
 
 #define SERVO__( ocr, reg )     TIMER_ ## ocr ## _ ## reg
 #define SERVO_( ocr, reg )      SERVO__( ocr, reg )
@@ -54,9 +55,18 @@ void InitMotors() {
     SERVO( 3, DDR ) |= SERVO( 3, MASK );
     SERVO( 4, DDR ) |= SERVO( 4, MASK );
 
+
+    //Habilitando interrupcion para controlar
+
+//    ETIMSK = (1 << TOIE3);
+
     return;
 }
-
+/*
+ISR(TIMER3_OVF_vect) {
+    Control(); 
+}
+*/
 void SetMotors() {
     uint8_t i;
 
@@ -72,12 +82,7 @@ void SetMotors() {
     SERVO( 1, OCR ) = motor[0];
     SERVO( 2, OCR ) = motor[1];
     SERVO( 3, OCR ) = motor[2];
-    //SERVO( 4, OCR ) = motor[3];
-    // controlador distinto
-
-//    motor[3] -= 100;
-    if(motor[3]<MOTORS_MIDDLE) motor[3] = MOTORS_MIDDLE;
-    SERVO( 4, OCR ) = (motor[3]-MOTORS_MIDDLE)*2 + MOTORS_MIN;
+    SERVO( 4, OCR ) = motor[3];
 
     return;
 }

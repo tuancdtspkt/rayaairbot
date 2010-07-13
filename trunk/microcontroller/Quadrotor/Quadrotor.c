@@ -168,9 +168,12 @@ int main(void)
         }
 
 
-        printf("%d %d", angle[0], angle[1]);
-        printf(" %d %d", gyro[0], gyro[1]);
-        printf(" %d %d %d\n", accelerometer[0], accelerometer[1], accelerometer[2]);
+        printf("%d %d", gyro[0], gyro[1]);
+        printf(" %d %d %d", accelerometer[0], accelerometer[1], accelerometer[2]);
+        //printf(" %d %d\n", angle[0], angle[1]);
+        printf(" %d %d", angle[0], angle[1]);
+        printf(" %d\n", (int)(theta*10));
+
 
         for ( i = 0; i < 2; i++ ) { // 2[ms]
             WaitForTimer0Rollover(); // 1[ms]

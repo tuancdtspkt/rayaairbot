@@ -8,13 +8,17 @@ void InitGyros() {
 }
 
 void GetGyros() {
-    uint16_t gADC[3];
-    uint8_t i;
+    uint16_t gADC[3] = {0,0,0};
+    uint8_t i, j;
 
     // Captura ADC
     for(i=0; i<3; i++) {
-        gADC[ i ] = a2d_10( i );
+        for(j=0; j<3; j++) {
+            gADC[i] += a2d_10(i);
+        }
+        gADC[i]/=3;
     }
+
 
     // Ajustando en comparacion al voltaje de referencia 
 //    for(i=0; i<2; i++) {
