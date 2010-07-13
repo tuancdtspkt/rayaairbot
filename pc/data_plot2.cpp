@@ -81,7 +81,7 @@ DataPlot2::DataPlot2(QWidget *parent):
     setAxisScale(QwtPlot::xBottom, 0, 100);
 
     setAxisTitle(QwtPlot::yLeft, "Values");
-    setAxisScale(QwtPlot::yLeft, -100, 100);
+    setAxisScale(QwtPlot::yLeft, -200, 200);
 
 }
 
