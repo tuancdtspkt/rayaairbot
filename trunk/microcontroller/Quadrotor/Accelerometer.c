@@ -25,25 +25,25 @@ void GetAccelerometer() {
 
     // Conversion de unidades
     //
-    // Medicion a V: 2.56/1024 V/bit
+    // Medicion a V: 2.56/1023 V/bit
     // Quitando Zero g Bias Level: 1.5 V
     // mV a g: 0.3 V/g
     //
-    // g = (ADC*(2.56/1024) - 1.5)/0.3
+    // g = (ADC*(2.56/1023) - 1.5)/0.3
     //
     // Simplificando:
-    // g = ADC/120 - 5
+    // g = ADC/119.88 - 5
 
     // Solo necesitamos calcular el angulo asique no necesitamos que este en g
-    // Para representar mejor el numero se multiplica por 120
+    // Para representar mejor el numero se multiplica por 119.88
     // 
-    // g = ADC - 600
+    // g = ADC - 599.4
     //
     // Este es un valor calculado usando los valores tipicos del datasheet del sensor.
     // Este valor puede necesitar ajuste pero es una buena aproximacion. 
 
     for(i=0; i<3; i++) {
-        accelerometer[i] = gADC[i] - 600;
+        accelerometer[i] = gADC[i] - 599;
     }
 
     angle[0] = atan((double)accelerometer[1]/(double)accelerometer[2])*100;

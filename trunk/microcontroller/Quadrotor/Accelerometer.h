@@ -8,6 +8,7 @@ void InitAccelerometer(void);
 void GetAccelerometer(void);
 
 // Multiply by this factor to convert accelerometer[] in g units.
-#define CONVERT_TO_G 120
+// 2.56/1023/0.3
+#define CONVERT_TO_G  0.00834147931f
 
 #endif
