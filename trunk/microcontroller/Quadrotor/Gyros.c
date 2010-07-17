@@ -30,9 +30,8 @@ void GetGyros() {
         gADC[i]/=3;
     }
 
-    for(i=0; i<2; i++) {
-        gyro[i] = gADC[i] - bias;
-    }
+    gyro[0] = gADC[0] - bias + 20;
+    gyro[1] = gADC[1] - bias + 26;
 
     return;
 }

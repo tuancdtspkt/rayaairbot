@@ -43,11 +43,11 @@ void GetAccelerometer() {
     // Este valor puede necesitar ajuste pero es una buena aproximacion. 
 
     for(i=0; i<3; i++) {
-        accelerometer[i] = gADC[i] - 599;
+        accelerometer[i] = gADC[i] - 669;
     }
 
-    angle[0] = atan((double)accelerometer[1]/(double)accelerometer[2])*100;
-    angle[1] = atan((double)accelerometer[0]/(double)accelerometer[2])*100;
+    angle[0] = -1*atan((double)accelerometer[1]/(double)accelerometer[2])*1000.0;
+    angle[1] = -1*atan((double)accelerometer[0]/(double)accelerometer[2])*1000.0;
 
     return;
 }

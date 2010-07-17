@@ -31,8 +31,12 @@
 
 #define CFG_USE_ADC 1
 
-#define CFG_TIMER0_INCLUDE "Control.h"
-#define CFG_TIMER0_MS_TICK Control();
+//#define CFG_TIMER0_INCLUDE "Control.h"
+//#define CFG_TIMER0_MS_TICK Control();
+
+#define CFG_TIMER_8_BIT_TICK 1
+#define CFG_TIMER_MICRO_TICK 0
+#define CFG_TIMER_MS_TICK 0
 
 #endif  // CONFIG_H
 
