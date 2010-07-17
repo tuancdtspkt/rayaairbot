@@ -30,6 +30,8 @@ int16_t joystick[ 4 ] = {0,0,0,0};
 
 #define N_DATOS 20
 
+int8_t Has3msPassed(void);
+
 void commandos(uint8_t ch) {
     static uint8_t buffer[80] = "";
     static uint8_t index_buffer = 0;
@@ -126,10 +128,11 @@ void commandos(uint8_t ch) {
 
 int main(void)
 {
-    int     i;
-    int     led = 0;
+//    uint8_t     i;
+    int16_t     led = 0;
     FILE   *u0;
-    FILE   *u1;
+//    FILE   *u1;
+    uint8_t count = 1;
 
     InitHardware();
 
@@ -155,31 +158,50 @@ int main(void)
     InitAccelerometer();
     InitMotors();
 
+    while(Has3msPassed() != -1);
+
     while(1) {
 
         switch ( led++ ) {
             case 0:
                 LED_ON( BLUE );
                 break;
-            case 1:
+            case 166:
                 LED_OFF( BLUE );
+                break;
+            case 333:
                 led = 0;
                 break;
         }
 
+        Control();
 
-        printf("%d %d", gyro[0], gyro[1]);
-        printf(" %d %d %d", accelerometer[0], accelerometer[1], accelerometer[2]);
-        //printf(" %d %d\n", angle[0], angle[1]);
-        printf(" %d %d", angle[0], angle[1]);
-        printf(" %d\n", (int)(theta*10));
-
-
-        for ( i = 0; i < 2; i++ ) { // 2[ms]
-            WaitForTimer0Rollover(); // 1[ms]
+        if(count++ >= 15) {
+            count = 1;
+            printf("%d %d", gyro[0], gyro[1]);
+            printf(" %d %d %d", accelerometer[0], accelerometer[1], accelerometer[2]);
+            //printf(" %d %d\n", angle[0], angle[1]);
+            printf(" %d %d", angle[0], angle[1]);
+            printf(" %d\n", (int)(theta*1000));
         }
+
+        while(Has3msPassed() != -1);
     }
 
     return 0;
+}
+
+int8_t Has3msPassed(void) {
+    static tick_t nextCount = 0;
+    tick_t tmpCount;
+
+    if ( (nextCount >= 6 && gTickCount >= nextCount) || (nextCount < 6 && (gTickCount+6)%255 >= (nextCount+6))) {
+        tmpCount = nextCount;
+        nextCount = (uint8_t)((uint16_t)gTickCount + 6)%255;
+        return (gTickCount - tmpCount);
+    }
+
+    return -1;
+
 }
 

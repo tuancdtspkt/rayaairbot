@@ -47,7 +47,7 @@
  * 8 bit counter running at CLK/1024 expires.  You will have to
  * change this value if you update at a different rate.
  */
-static float	dt	= 0.003; // 3 ¿ms?
+static float	dt	= 0.006; // 3 ¿ms?
 
 
 
