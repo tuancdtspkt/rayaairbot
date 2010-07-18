@@ -5,7 +5,7 @@
 #include "Pid.h"
 
 extern int16_t u[4];
-extern float theta;
+extern float theta[2];
 
 extern struct PID pid[2];
 

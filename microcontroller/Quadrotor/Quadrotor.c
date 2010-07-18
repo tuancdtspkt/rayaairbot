@@ -24,13 +24,14 @@
 #include "Accelerometer.h"
 #include "Motors.h"
 #include "Control.h"
+#include "Pid.h"
 //#include "a2d.h"
 
 int16_t joystick[ 4 ] = {0,0,0,0}; 
 
 #define N_DATOS 20
 
-int8_t Has3msPassed(void);
+int16_t Has10msPassed(void);
 
 void commandos(uint8_t ch) {
     static uint8_t buffer[80] = "";
@@ -86,8 +87,8 @@ void commandos(uint8_t ch) {
                 return;
             }
             int16_t value = (argumentos[1] << 8) | argumentos[2];
-            if(argumentos[0]!=3)
-	    	value >>= 4;
+//            if(argumentos[0]!=3)
+//	    	value >>= 4;
             joystick[argumentos[0]] = value;
 //                    printf("joy[%d]=%d\n", argumentos[0], value);
         } else if((comando == 's')) {
@@ -133,6 +134,7 @@ int main(void)
     FILE   *u0;
 //    FILE   *u1;
     uint8_t count = 1;
+    uint16_t j=0;
 
     InitHardware();
 
@@ -158,7 +160,7 @@ int main(void)
     InitAccelerometer();
     InitMotors();
 
-    while(Has3msPassed() != -1);
+    while(Has10msPassed() != -1);
 
     while(1) {
 
@@ -174,30 +176,45 @@ int main(void)
                 break;
         }
 
+//        j = gTickCount;
         Control();
 
-        if(count++ >= 15) {
+/*
+        if(j <= gTickCount)
+            printf("%d\n", gTickCount - j);
+        else
+            printf("%d\n", 255-(j-gTickCount));
+*/
+
+        if(count++ >= 4) {
             count = 1;
+/*
             printf("%d %d", gyro[0], gyro[1]);
             printf(" %d %d %d", accelerometer[0], accelerometer[1], accelerometer[2]);
             //printf(" %d %d\n", angle[0], angle[1]);
             printf(" %d %d", angle[0], angle[1]);
-            printf(" %d\n", (int)(theta*1000));
+            printf(" %d %d\n", (int)theta[0]*1000, (int)theta[1]*1000);
+*/
+            printf("%d %d\n", (int16_t)(theta[0]*1000), (int16_t)(theta[1]*1000));
+//            printf("%d = %d*%d/100 + %d/100*%d + %d*(%d-%d)/10\n", pid[0].r, pid[0].P, pid[0].e, pid[0].integratedError, pid[0].I, pid[0].D, pid[0].lastPosition, (int16_t)theta[0]*100);
+            printf("%d = %d*%d/100 + %d/100*%d + %d*(%d-%d)/10\n", pid[1].r, pid[1].P, pid[1].e, pid[1].integratedError, pid[1].I, pid[1].D, pid[1].lastPosition, pid[1].e);
         }
 
-        while(Has3msPassed() != -1);
+        while((j=Has10msPassed()) == -1);
+//        printf("%d\n", j);
     }
 
     return 0;
 }
 
-int8_t Has3msPassed(void) {
-    static tick_t nextCount = 0;
+int16_t Has10msPassed(void) {
+    static int16_t nextCount = 0;
     tick_t tmpCount;
 
-    if ( (nextCount >= 6 && gTickCount >= nextCount) || (nextCount < 6 && (gTickCount+6)%255 >= (nextCount+6))) {
+    if ( gTickCount >= nextCount) {
         tmpCount = nextCount;
-        nextCount = (uint8_t)((uint16_t)gTickCount + 6)%255;
+        nextCount = (uint16_t)gTickCount + 10;
+        if(nextCount>=256) nextCount -= 256;
         return (gTickCount - tmpCount);
     }
 

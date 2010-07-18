@@ -47,7 +47,7 @@ void GetAccelerometer() {
     }
 
     angle[0] = -1*atan((double)accelerometer[1]/(double)accelerometer[2])*1000.0;
-    angle[1] = -1*atan((double)accelerometer[0]/(double)accelerometer[2])*1000.0;
+    angle[1] = atan((double)accelerometer[0]/(double)accelerometer[2])*1000.0;
 
     return;
 }

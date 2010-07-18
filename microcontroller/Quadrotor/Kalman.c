@@ -38,16 +38,50 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#include <math.h>
+//#include <math.h>
+#include "Kalman.h"
 
+/*
+struct KALMAN {
+    float angle;
+    float dt;
+    float P[2][2];
+    float q_bias;
+    float rate;
+    float R_angle;
+    float Q_angle;
+    float Q_gyro;
+}; */
+
+struct KALMAN kalman[2] = {
+    {
+        0,
+        0.01,
+        {{1,0},{0,1},},
+        0,
+        0,
+        0.3,
+        0.001,
+        0.003,
+    },
+    {
+        0,
+        0.01,
+        {{1,0},{0,1},},
+        0,
+        0,
+        0.3,
+        0.001,
+        0.003,
+    },
+};
 
 /*
  * Our update rate.  This is how often our state is updated with
- * gyro rate measurements.  For now, we do it every time an
- * 8 bit counter running at CLK/1024 expires.  You will have to
- * change this value if you update at a different rate.
+ * gyro rate measurements. You will have to change this value
+ * if you update at a different rate.
  */
-static float	dt	= 0.006; // 3 ¿ms?
+//static float	dt	= 0.006; // 3 ¿ms?
 
 
 
@@ -55,10 +89,10 @@ static float	dt	= 0.006; // 3 ¿ms?
  * Our covariance matrix.  This is updated at every time step to
  * determine how well the sensors are tracking the actual state.
  */
-static float		P[2][2] = {
-	{ 1, 0 },
-	{ 0, 1 },
-};
+//static float		P[2][2] = {
+//	{ 1, 0 },
+//	{ 0, 1 },
+//};
 
 
 /*
@@ -66,9 +100,9 @@ static float		P[2][2] = {
  * the angle, we also have an unbiased angular rate available.   These are
  * read-only to the user of the module.
  */
-static float	angle;
-static float	q_bias;
-static float	rate;
+//static float	angle;
+//static float	q_bias;
+//static float	rate;
 
 
 /*
@@ -76,7 +110,7 @@ static float	rate;
  * it is a 1x1 matrix that says that we expect 0.3 rad jitter
  * from the accelerometer.
  */
-static float	R_angle	= 0.3;
+//static float	R_angle	= 0.3;
 
 
 /*
@@ -84,8 +118,8 @@ static float	R_angle	= 0.3;
  * In this case, it indicates how much we trust the acceleromter
  * relative to the gyros.
  */
-static float	Q_angle	= 0.001; // 0.001;
-static float	Q_gyro	= 0.003; // 0.003;
+//static float	Q_angle	= 0.001; // 0.001;
+//static float	Q_gyro	= 0.003; // 0.003;
 
 
 /*
@@ -126,17 +160,12 @@ static float	Q_gyro	= 0.003; // 0.003;
  * to read, debug and extend, but also allows us to do this with
  * very little CPU time.
  */
-void
-KalmanStateUpdate(
-	float		q_m	/* Pitch gyro measurement */
-)
+void KalmanStateUpdate(struct KALMAN *kalman, float q_m) /* Pitch gyro measurement */
 {
-
-	static float 	q,
-						Pdot[2 * 2];
+	static float q, Pdot[2 * 2];
 			
 	/* Unbias our gyro */
-	q = q_m - q_bias;
+	q = q_m - kalman->q_bias;
 
 	/*
 	 * Compute the derivative of the covariance matrix
@@ -147,13 +176,13 @@ KalmanStateUpdate(
 	 * by P and P multiplied by A' = [ 0 0, -1, 0 ].  This is then added
 	 * to the diagonal elements of Q, which are Q_angle and Q_gyro.
 	 */
-	Pdot[0] = Q_angle - P[0][1] - P[1][0];	/* 0,0 */
-	Pdot[1] = - P[1][1];		/* 0,1 */
-	Pdot[2] = - P[1][1];		/* 1,0 */
-	Pdot[3] = Q_gyro;			/* 1,1 */
+	Pdot[0] = kalman->Q_angle - kalman->P[0][1] - kalman->P[1][0];	/* 0,0 */
+	Pdot[1] = - kalman->P[1][1];		/* 0,1 */
+	Pdot[2] = - kalman->P[1][1];		/* 1,0 */
+	Pdot[3] = kalman->Q_gyro;			/* 1,1 */
 
 	/* Store our unbias gyro estimate */
-	rate = q;
+	kalman->rate = q;
 
 	/*
 	 * Update our angle estimate
@@ -161,13 +190,13 @@ KalmanStateUpdate(
 	 *       += (gyro - gyro_bias) * dt
 	 *       += q * dt
 	 */
-	angle += q * dt;
+	kalman->angle += q * kalman->dt;
 
 	/* Update the covariance matrix */
-	P[0][0] += Pdot[0] * dt;
-	P[0][1] += Pdot[1] * dt;
-	P[1][0] += Pdot[2] * dt;
-	P[1][1] += Pdot[3] * dt;
+	kalman->P[0][0] += Pdot[0] * kalman->dt;
+	kalman->P[0][1] += Pdot[1] * kalman->dt;
+	kalman->P[1][0] += Pdot[2] * kalman->dt;
+	kalman->P[1][1] += Pdot[3] * kalman->dt;
 }
 
 
@@ -203,29 +232,14 @@ KalmanStateUpdate(
  * estimate and the angle measurement has no relation to the gyro
  * bias.
  */
-float
-KalmanUpdate(
-//	float		ax_m,	/* X acceleration */
-//	float		az_m	/* Z acceleration */
-float angle_m
-)
-{
+float KalmanUpdate(struct KALMAN *kalman, float angle_m) {
 	/* Variable declaration */
-	static float	//angle_m,
-						angle_err,
-						C_0,
-						PCt_0,
-						PCt_1,
-						E,
-						K_0,
-						K_1,
-						t_0,
-						t_1;						
+	static float angle_err, C_0, PCt_0, PCt_1, E, K_0, K_1, t_0, t_1;						
 
 	/* Compute our measured angle and the error in our estimate */
 	//angle_m = atan2( -az_m, ax_m );
 //	angle_m = atan( -ax_m/ az_m );
-	angle_err = angle_m - angle;
+	angle_err = angle_m - kalman->angle;
 
 	/*
 	 * C_0 shows how the state measurement directly relates to
@@ -244,8 +258,8 @@ float angle_m
 	 * Note that C[0,1] = C_1 is zero, so we do not compute that
 	 * term.
 	 */
-	PCt_0 = C_0 * P[0][0]; /* + C_1 * P[0][1] = 0 */
-	PCt_1 = C_0 * P[1][0]; /* + C_1 * P[1][1] = 0 */
+	PCt_0 = C_0 * kalman->P[0][0]; /* + C_1 * P[0][1] = 0 */
+	PCt_1 = C_0 * kalman->P[1][0]; /* + C_1 * P[1][1] = 0 */
 		
 	/*
 	 * Compute the error estimate.  From the Kalman filter paper:
@@ -258,7 +272,7 @@ float angle_m
 	 *
 	 * Again, note that C_1 is zero, so we do not compute the term.
 	 */
-	E = R_angle
+	E = kalman->R_angle
 		+ C_0 * PCt_0
 	/*	+ C_1 * PCt_1 = 0 */
 	;
@@ -297,12 +311,12 @@ float angle_m
 	 * This saves us a floating point multiply.
 	 */
 	t_0 = PCt_0; /* C_0 * P[0][0] + C_1 * P[1][0] */
-	t_1 = C_0 * P[0][1]; /* + C_1 * P[1][1]  = 0 */
+	t_1 = C_0 * kalman->P[0][1]; /* + C_1 * P[1][1]  = 0 */
 
-	P[0][0] -= K_0 * t_0;
-	P[0][1] -= K_0 * t_1;
-	P[1][0] -= K_1 * t_0;
-	P[1][1] -= K_1 * t_1;
+	kalman->P[0][0] -= K_0 * t_0;
+	kalman->P[0][1] -= K_0 * t_1;
+	kalman->P[1][0] -= K_1 * t_0;
+	kalman->P[1][1] -= K_1 * t_1;
 	
 	/*
 	 * Update our state estimate.  Again, from the Kalman paper:
@@ -318,8 +332,8 @@ float angle_m
 	 * between the two accelerometer measured angle and our estimated
 	 * angle.
 	 */
-	angle	+= K_0 * angle_err;
-	q_bias	+= K_1 * angle_err;
+	kalman->angle	+= K_0 * angle_err;
+	kalman->q_bias	+= K_1 * angle_err;
 
-	return angle;
+	return kalman->angle;
 }
