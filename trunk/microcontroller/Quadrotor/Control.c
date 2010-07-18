@@ -10,7 +10,7 @@
 #include "Fuzzy.h"
 #include "Kalman.h"
 
-float theta = 0;
+float theta[2] = {0,0};
 
 // gADC[0] -> gyro x
 // gADC[1] -> gyro y
@@ -40,26 +40,18 @@ void zeroIntegralError() {
 }
 
 void Control(void) // Timer.c llama esta funcion cada 1ms
-{
-    // variables auxiliares
-    uint8_t i;
-    static uint16_t k=0;
-    static uint8_t periodo=0;
-
-    //cada 5ms el if es falso
-    if(periodo++%3 != 0) {
-        return;
-    }
-    
+{    
     GetGyros();
     GetAccelerometer();
 
 
-    KalmanStateUpdate((float)gyro[0]*CONVERT_TO_RAD_S);	// Update gyro measurement
-    theta = KalmanUpdate((float)angle[0]/1000.0);
+    KalmanStateUpdate(&kalman[0], (float)gyro[0]*CONVERT_TO_RAD_S);	// Update gyro measurement
+    theta[0] = KalmanUpdate(&kalman[0], (float)angle[0]/1000.0);
+
+    KalmanStateUpdate(&kalman[1], (float)gyro[1]*CONVERT_TO_RAD_S);	// Update gyro measurement
+    theta[1] = KalmanUpdate(&kalman[1], (float)angle[1]/1000.0);
 //    theta = kalman_update(0);
 
-    periodo=1;
 /*
     //cada 50ms ejecuta esto:
     if(periodo%50 == 1) {
@@ -84,8 +76,8 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
 //    u[0] = Fuzzy(&fuzzy[0], 0, 0);
 //    u[1] = Fuzzy(&fuzzy[1], 0, 0);
 
-    u[0] = UpdatePID(&pid[0], joystick[1], gyro[0]);
-    u[1] = UpdatePID(&pid[1], joystick[0], gyro[1]);
+    u[0] = UpdatePID(&pid[0], joystick[0], (int16_t)((float)theta[0]*1000.0));
+    u[1] = UpdatePID(&pid[1], joystick[1], (int16_t)((float)theta[1]*1000.0));
 
     //u[0] = joystick[0]/10;
     u[2] = joystick[2];
