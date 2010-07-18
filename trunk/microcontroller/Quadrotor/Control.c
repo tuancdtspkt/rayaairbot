@@ -76,8 +76,8 @@ void Control(void) // Timer.c llama esta funcion cada 1ms
 //    u[0] = Fuzzy(&fuzzy[0], 0, 0);
 //    u[1] = Fuzzy(&fuzzy[1], 0, 0);
 
-    u[0] = UpdatePID(&pid[0], joystick[0], (int16_t)((float)theta[0]*1000.0));
-    u[1] = UpdatePID(&pid[1], joystick[1], (int16_t)((float)theta[1]*1000.0));
+    u[0] = UpdatePID(&pid[0], joystick[0], (int16_t)((float)theta[0]*1000.0), -gyro[0]);
+    u[1] = UpdatePID(&pid[1], joystick[1], (int16_t)((float)theta[1]*1000.0), -gyro[1]);
 
     //u[0] = joystick[0]/10;
     u[2] = joystick[2];
