@@ -186,7 +186,7 @@ int main(void)
             printf("%d\n", 255-(j-gTickCount));
 */
 
-        if(count++ >= 4) {
+        if(count++ >= 5) {
             count = 1;
 /*
             printf("%d %d", gyro[0], gyro[1]);
@@ -197,7 +197,9 @@ int main(void)
 */
             printf("%d %d\n", (int16_t)(theta[0]*1000), (int16_t)(theta[1]*1000));
 //            printf("%d = %d*%d/100 + %d/100*%d + %d*(%d-%d)/10\n", pid[0].r, pid[0].P, pid[0].e, pid[0].integratedError, pid[0].I, pid[0].D, pid[0].lastPosition, (int16_t)theta[0]*100);
-            printf("%d = %d*%d/100 + %d/100*%d + %d*(%d-%d)/10\n", pid[1].r, pid[1].P, pid[1].e, pid[1].integratedError, pid[1].I, pid[1].D, pid[1].lastPosition, pid[1].e);
+//            printf("%d = %d*%d/100 + %d/100*%d + %d*(%d-%d)/10\n", pid[1].r, pid[1].P, pid[1].e, pid[1].integratedError, pid[1].I, pid[1].D, pid[1].lastPosition, pid[1].e);
+//            printf("%d = %d*%d/100 + %d/100*%d + %d*(%d)/10  ", pid[0].r, pid[0].P, pid[0].e, pid[0].integratedError, pid[0].I, pid[0].D, -gyro[0]);
+//            printf("%d = %d*%d/100 + %d/100*%d + %d*(%d)/10\n", pid[1].r, pid[1].P, pid[1].e, pid[1].integratedError, pid[1].I, pid[1].D, -gyro[1]);
         }
 
         while((j=Has10msPassed()) == -1);
