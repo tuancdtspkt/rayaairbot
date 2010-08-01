@@ -2,19 +2,9 @@
 #include "Gyros.h"
 
 int16_t gyro[2] = {0,0};
-int16_t bias = 0;
+int16_t gyro_angle[2] = {0,0};
 
 void InitGyros() {
-    uint8_t j;
-
-    bias = 0;
-
-    for(j=0; j<20; j++) {
-        bias += a2d_10(2);
-    }
-
-    bias /= 20;
-
     return;
 }
 
@@ -24,14 +14,20 @@ void GetGyros() {
 
     // Captura ADC
     for(i=0; i<2; i++) {
-        for(j=0; j<3; j++) {
-            gADC[i] += a2d_10(i);
-        }
-        gADC[i]/=3;
+//        for(j=0; j<3; j++) {
+            gADC[i] = a2d_10(i);
+//        }
+//        gADC[i]/=3;
     }
 
-    gyro[0] = gADC[0] - bias + 20;
-    gyro[1] = gADC[1] - bias + 26;
+    gyro[0] = gADC[0] - 509;
+    gyro[1] = gADC[1] - 499;
+
+    gyro_angle[0] += gyro[0]/16;
+    gyro_angle[1] += gyro[1]/16;
+
+//    gyro[0] >>= 4;
+//    gyro[1] >>= 4;
 
     return;
 }

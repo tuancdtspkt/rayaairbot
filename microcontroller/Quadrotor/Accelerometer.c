@@ -17,10 +17,10 @@ void GetAccelerometer() {
 
     // Captura ADC
     for(i=0; i<3; i++) {
-        for(j=0; j<3; j++) {
+//        for(j=0; j<3; j++) {
             gADC[i] += a2d_10(i+4);
-        }
-	gADC[i] /= 3;
+//        }
+//	gADC[i] /= 3;
     }
 
     // Conversion de unidades
