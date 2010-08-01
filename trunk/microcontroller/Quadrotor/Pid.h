@@ -12,7 +12,8 @@ struct PID {
   int16_t r;
 };
 
-int16_t UpdatePID(struct PID *pid, int16_t referencia, int16_t posicion_actual, int16_t gyro);
+int16_t UpdatePID(struct PID *pid, int16_t referencia, int16_t posicion_actual);
+//int16_t UpdatePID(struct PID *pid, int16_t referencia, int16_t posicion_actual, int16_t gyro);
 
 
 #endif

@@ -2,6 +2,7 @@
 #define GYROS_H
 
 extern int16_t gyro[2];
+extern int16_t gyro_angle[2];
 
 void InitGyros(void);
 void GetGyros(void); 
