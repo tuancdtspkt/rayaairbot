@@ -1,7 +1,7 @@
 #ifndef TIMER1_H
 #define TIMER1_H
 
-#include <libopencm3/stm32/timer.h>
+#include <stm32/timer.h>
 
 void timer1_setup();
 

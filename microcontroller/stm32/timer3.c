@@ -7,11 +7,11 @@ void timer3_setup()
 	/* Set timer start value */
 	TIM_CNT(TIM3) = 1;
 
-	/* Set timer prescaler. 72MHz/720 => 10kHz counts per second */
-	TIM_PSC(TIM3) = 7200;
+	/* Set timer prescaler. 72MHz/720 => 100kHz counts per second */
+	TIM_PSC(TIM3) = 720;
 
 	/* End timer value. If this value is reached an interrupt is generated */
-	TIM_ARR(TIM3) = 200; // 50 Hz
+	TIM_ARR(TIM3) = 100; // 1 kHz
 
 	/* Update interrupt enable */
 	TIM_DIER(TIM3) |= TIM_DIER_UIE;

@@ -2,17 +2,15 @@
 
 void timer2_setup()
 {
-    // Timer 2 a 5kHz
+    // Timer 2 a 1kHz
 	/* Set timer start value */
 	TIM_CNT(TIM2) = 1;
 
-	/* Set timer prescaler. 72MHz/144 => 500000 counts per second */
-//	TIM_PSC(TIM2) = 144;  // 1kHz
-	TIM_PSC(TIM2) = 144;  // 0.1 seg
+	/* Set timer prescaler. 72MHz/144 => 500kHz counts per second */
+	TIM_PSC(TIM2) = 1440;  // 50kHz
 
 	/* End timer value. If this value is reached an interrupt is generated */
-	TIM_ARR(TIM2) = 500; // 1kHz
-//	TIM_ARR(TIM2) = 2000; // 250 Hz
+	TIM_ARR(TIM2) = 50; // 500kHz/500 => 1kHz
 
 	/* Update interrupt enable */
 	TIM_DIER(TIM2) |= TIM_DIER_UIE;

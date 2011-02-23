@@ -34,9 +34,9 @@ void control_setup() {
 void control() {
     s16 joystick_[4];
     s16 m[4];
-	s16 tmp;
+//	s16 tmp;
 	static u16 i=0;
-	unsigned char buf[30];
+//	unsigned char buf[30];
 
     joystick_[0] = joystick[0];
     joystick_[1] = joystick[1];
@@ -61,10 +61,10 @@ void control() {
     if(joystick_[3]<-100)
     	joystick_[3] = -100;
 
-    m[1] = joystick[2] - joystick[3]/4 + joystick[0]/8;
-	m[0] = joystick[2] + joystick[3]/4 - joystick[1]/8;
-	m[2] = joystick[2] - joystick[3]/4 - joystick[0]/8;
-	m[3] = joystick[2] + joystick[3]/4 + joystick[1]/8;
+    m[1] = joystick_[2] - joystick_[3]/4 + joystick_[0]/8;
+	m[0] = joystick_[2] + joystick_[3]/4 - joystick_[1]/8;
+	m[2] = joystick_[2] - joystick_[3]/4 - joystick_[0]/8;
+	m[3] = joystick_[2] + joystick_[3]/4 + joystick_[1]/8;
 
 	/*
 	setMotor(0, m[0]);
@@ -73,9 +73,8 @@ void control() {
 	setMotor(3, m[3]);
 	*/
 
-	if((i++%10) == 0) {
-		
-/*		
+	if((i++%500) == 0) {
+/*
 		buf[0] = CMD_GRAFICAR;
 
 		buf[1] = (result_array[0] >> 8) & 0xFF;
@@ -94,12 +93,13 @@ void control() {
 		buf[10] = (result_array[4] >> 0) & 0xFF;
 
 		send_cmd(buf, 10);
+
 */
+
 		/*
 		buf[10] = (result_array[5] >> 8) & 0xFF;
 		buf[11] = (result_array[5] >> 0) & 0xFF;
 		*/
-
 		putint(result_array[0]);
 		putstring("\t");
 		putint(result_array[1]);
@@ -109,12 +109,14 @@ void control() {
 		putint(result_array[3]);
 		putstring("\t");
 		putint(result_array[4]);
-/*
 		putstring("\t");
+/*
 		putint((int)(angle[0]*10.0));
 		putstring("\t");
 		putint((int)(angle[1]*10.0));
 
+*/
+/*
 
 		putint(joystick[0]);
 		putstring("\t");
@@ -125,5 +127,6 @@ void control() {
 		putint(joystick[3]);
 */
 		putstring("\r\n");
+
 	}
 }

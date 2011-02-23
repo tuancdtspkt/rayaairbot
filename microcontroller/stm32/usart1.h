@@ -1,10 +1,10 @@
 #ifndef USART_H
 #define USART_H
 
-#include <libopencm3/stm32/usart.h>
+#include <stm32/usart.h>
 #include "fifo.h"
-#include "gpio.h"
-#include "nvic.h"
+#include "gpio_.h"
+#include "nvic_.h"
 
 extern struct fifo usart1_fifo_tx;
 extern struct fifo usart1_fifo_rx;
@@ -20,14 +20,17 @@ unsigned char adding_excess(unsigned int checksum);
 
 void putonechar(const char c);
 void putstring(const char *s);
+void putstring_whiout_interrupt(const char *s);
 void putfloat(float value);
 void putint(int value);
+
+void usart1_parcer();
 
 void send_cmd(unsigned char buf[], unsigned char size);
 
 
-#define START_CHAR 128
-#define ESC_CHAR 127
+#define START_CHAR 1
+#define ESC_CHAR 0
 
 #define CMD_ACK 2 // CMD
 #define CMD_NAK 3 // CMD

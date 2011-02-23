@@ -1,7 +1,7 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
-#include "adc.h"
+#include "adc_.h"
 #include "usart1.h"
 #include "joystick.h"
 #include "kalman.h"

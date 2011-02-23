@@ -1,7 +1,7 @@
 #ifndef FIFO_H
 #define FIFO_H
 
-#define FIFO_SIZE 100
+#define FIFO_SIZE 200
 
 #define EMPTY 0
 #define NOT_FULL 1
