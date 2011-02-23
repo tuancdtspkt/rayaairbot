@@ -39,7 +39,7 @@
  *
  */
 //#include <math.h>
-#include "Kalman.h"
+#include "kalman.h"
 
 /*
 struct KALMAN {

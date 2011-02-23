@@ -14,7 +14,7 @@ void joystick_setup() {
 
 void joystick_capture()
 {
-    static u8 n=0,j;
+    static u8 n=0;
     static u16 time_previous = 0;
 	static u16 joystick_[6] = {0,0,0,0,0,0};
     u16 time, time_delta;

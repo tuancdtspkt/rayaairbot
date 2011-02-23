@@ -1,5 +1,5 @@
 ##
-## This file is part of the libopenstm32 project.
+## This file is part of the libopencm3 project.
 ##
 ## Copyright (C) 2009 Uwe Hermann <uwe@hermann-uwe.de>
 ##
@@ -17,85 +17,11 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-BINARY		= rayaairbot
-OBJECTS 	= fifo.o delay.o gpio.o exti.o nvic.o clock.o timer1.o joystick.o usart1.o timer2.o adc.o dma.o kalman.o motors.o timer3.o timer4.o control.o
+BINARY = rayaairbot
+OBJS = fifo.o delay.o gpio_.o exti_.o nvic_.o clock.o timer1.o joystick.o usart1.o timer2.o adc_.o dma_.o kalman.o motors.o timer3.o timer4.o control.o
 
-PREFIX	?= arm-none-eabi
-#PREFIX		?= arm-elf
-CC		= $(PREFIX)-gcc
-#LD		= $(PREFIX)-ld
-LD		= $(PREFIX)-gcc
-OBJCOPY		= $(PREFIX)-objcopy
-OBJDUMP		= $(PREFIX)-objdump
-# Uncomment this line if you want to use the installed (not local) library.
-#TOOLCHAIN_DIR	= `dirname \`which $(CC)\``/../$(PREFIX)
-TOOLCHAIN_DIR	= ~/sat/arm-none-eabi
-CFLAGS		    = -O0 -g -I$(TOOLCHAIN_DIR)/include -mcpu=cortex-m3 -mthumb -fno-common 
 
-LDSCRIPT	= $(BINARY).ld
-LDFLAGS     =  -L$(TOOLCHAIN_DIR)/lib -T$(LDSCRIPT) -nostartfiles -mcpu=cortex-m3 -mthumb -fno-common -O0 -g
-OBJS		= $(OBJECTS) $(BINARY).o
+PREFIX = arm-none-eabi
 
-OPENOCD_BASE	= /opt/local
-OPENOCD		    = $(OPENOCD_BASE)/bin/openocd
-OPENOCD_SCRIPTS	= $(OPENOCD_BASE)/share/openocd/scripts
-OPENOCD_FLASHER	= $(OPENOCD_SCRIPTS)/interface/olimex-arm-usb-ocd.cfg
-OPENOCD_BOARD	= $(OPENOCD_SCRIPTS)/board/olimex_stm32_h103.cfg
-
-# Be silent per default, but 'make V=1' will show all compiler calls.
-ifneq ($(V),1)
-Q := @
-NULL := 2>/dev/null
-endif
-
-all: images
-
-macfix:
-	sudo kextunload /System/Library/Extensions/FTDIUSBSerialDriver.kext/ 
-	sudo kextload /System/Library/Extensions/FTDIUSBSerialDriver.kext/
-
-images: $(BINARY)
-	@printf "  OBJCOPY $(BINARY).bin\n"
-	$(Q)$(OBJCOPY) -Obinary $(BINARY) $(BINARY).bin
-	@printf "  OBJCOPY $(BINARY).hex\n"
-	$(Q)$(OBJCOPY) -Oihex $(BINARY) $(BINARY).hex
-	@printf "  OBJCOPY $(BINARY).srec\n"
-	$(Q)$(OBJCOPY) -Osrec $(BINARY) $(BINARY).srec
-	@printf "  OBJDUMP $(BINARY).list\n"
-	$(Q)$(OBJDUMP) -S $(BINARY) > $(BINARY).list
-
-$(BINARY): $(OBJS) $(LDSCRIPT)
-	@printf "  LD      $(subst $(shell pwd)/,,$(@))\n"
-	$(Q)$(LD) $(LDFLAGS) -o $(BINARY) $(OBJS) -lopencm3_stm32 -lm -lgcc
-
-%.o: %.c Makefile
-	@printf "  CC      $(subst $(shell pwd)/,,$(@))\n"
-	$(Q)$(CC) $(CFLAGS) -o $@ -c $<
-
-clean:
-	@printf "  CLEAN   $(subst $(shell pwd)/,,$(OBJS))\n"
-	$(Q)rm -f *.o
-	@printf "  CLEAN   $(BINARY)\n"
-	$(Q)rm -f $(BINARY)
-	@printf "  CLEAN   $(BINARY).bin\n"
-	$(Q)rm -f $(BINARY).bin
-	@printf "  CLEAN   $(BINARY).hex\n"
-	$(Q)rm -f $(BINARY).hex
-	@printf "  CLEAN   $(BINARY).srec\n"
-	$(Q)rm -f $(BINARY).srec
-	@printf "  CLEAN   $(BINARY).list\n"
-	$(Q)rm -f $(BINARY).list
-
-flash: images
-	@printf "  FLASH   $(BINARY).bin\n"
-	@# IMPORTANT: Don't use "resume", only "reset" will work correctly!
-	$(OPENOCD) -s $(OPENOCD_SCRIPTS) \
-		       -f $(OPENOCD_FLASHER) \
-		       -f $(OPENOCD_BOARD) \
-		       -c "init" -c "halt" -c "reset init" \
-		       -c "flash write_image erase $(BINARY).hex" \
-		       -c "soft_reset_halt" -c "resume" \
-		       -c "shutdown" $(NULL)
-
-.PHONY: images clean
+include Makefile.include
 

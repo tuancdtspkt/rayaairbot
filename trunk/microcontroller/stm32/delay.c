@@ -2,7 +2,7 @@
 
 void delay_ms(u16 ms)
 {
-	u16 i, j;
+	volatile u16 i, j;
 	for(; ms>0; ms--)
 		for (i = 0; i < 500; i++)
 			for (j = 0; j < 5; j++);

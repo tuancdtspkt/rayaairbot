@@ -48,9 +48,9 @@ void usart1_setup() {
 }
 
 void usart1_parcer() {
-    unsigned char c;
+//    unsigned char c;
     unsigned char data;
-    unsigned char data2[10];
+//    unsigned char data2[10];
 
     data = fifo_pop(&usart1_fifo_rx);
 
@@ -96,7 +96,7 @@ void usart1_isr() {
 
 	}
 
-	else if (USART_SR(USART1) & USART_SR_TXE) {
+	if (USART_SR(USART1) & USART_SR_TXE) {
 		if(usart1_fifo_tx.status != EMPTY) {
 //			USART_SR(USART1) &= ~USART_SR_TXE; // clear interrupt
 			USART_DR(USART1) = fifo_pop(&usart1_fifo_tx);
@@ -207,27 +207,25 @@ unsigned char adding_excess(unsigned int checksum) {
 }
 
 void usart1_send(char c) {
+
 /*
 	USART_DR(USART1) = c;
 	while ((USART_SR(USART1) & USART_SR_TXE) == 0);
+    return;
 */
+
+
 //	PC3_TOGGLE;
 
 	if(usart1_fifo_tx.status != FULL) {
 		fifo_push(&usart1_fifo_tx, c);
 
-
 		if (tx_restart) { // If transmit interrupt is disabled, enable it
 			tx_restart = 0;
-//			while ((USART_SR(USART1) & USART_SR_TC) == USART_SR_TC);
 			USART_CR1(USART1) |= USART_CR1_TXEIE;
 		}
 
 	} // else fifo full
-
-
-
-
 
 //	PC3_TOGGLE;
 
@@ -276,6 +274,17 @@ void putstring(const char *s)
     int i;
     for(i=0; s[i] != '\0'; ++i) {
     	usart1_send(s[i]);
+    }
+
+    return;
+}
+
+void putstring_whiout_interrupt(const char *s)
+{
+    int i;
+    for(i=0; s[i] != '\0'; ++i) {
+    	USART_DR(USART1) = s[i];
+    	while ((USART_SR(USART1) & USART_SR_TXE) == 0);
     }
 
     return;
