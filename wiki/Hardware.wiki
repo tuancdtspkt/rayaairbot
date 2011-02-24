@@ -13,7 +13,7 @@
 
 1x *Verdex Pro* - http://www.gumstix.com/store/catalog/product_info.php?products_id=209
 
-1x *Robostix* - http://www.gumstix.com/store/catalog/product_info.php?products_id=139
+1x *STM32-H103* - http://www.olimex.com/dev/stm32-h103.html
 
 1x *Netpro-vx* - http://www.gumstix.com/store/catalog/product_info.php?products_id=207
 
@@ -22,3 +22,5 @@
 1x *Gyro Breakout Board - LPR530AL Dual 300°/s* - http://www.sparkfun.com/commerce/product_info.php?products_id=9413
 
 1x *Triple Axis Accelerometer - ADXL335* - http://www.olimex.cl/product_info.php?cPath=50_85&products_id=604
+
+and more.
