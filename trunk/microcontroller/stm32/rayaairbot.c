@@ -33,11 +33,8 @@ void hard_fault_handler(void) {
 
 int main(void)
 {
-//	u16 port_status;
-//	u16 port_status_old;
 	u16 co=0;
-//	unsigned char buf[2];
-    //float angle_tmp[2]={0.0, 0.0};
+    float angle_tmp[2]={0.0, 0.0};
 
 	clock_setup();
 	gpio_setup();
@@ -74,10 +71,10 @@ int main(void)
 
 	delay(1000);
 	delay(1000);
-	delay(1000);/*
 	delay(1000);
 	delay(1000);
-	delay(1000);*/
+	delay(1000);
+	delay(1000);
 
 	enable_adc_offset_flag=0;
 	LED_TOGGLE;
