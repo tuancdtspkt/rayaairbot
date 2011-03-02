@@ -73,7 +73,7 @@ void control() {
 	setMotor(3, m[3]);
 	*/
 
-	if((i++%500) == 0) {
+	if((i++%50) == 0) {
 /*
 		buf[0] = CMD_GRAFICAR;
 
@@ -109,7 +109,8 @@ void control() {
 		putint(result_array[3]);
 		putstring("\t");
 		putint(result_array[4]);
-		putstring("\t");
+//		putstring("\t");
+
 /*
 		putint((int)(angle[0]*10.0));
 		putstring("\t");
@@ -126,7 +127,7 @@ void control() {
 		putstring("\t");
 		putint(joystick[3]);
 */
-		putstring("\r\n");
+		putstring("\n");
 
 	}
 }

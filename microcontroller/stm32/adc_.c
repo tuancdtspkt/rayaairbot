@@ -39,11 +39,11 @@ void adc_setup(void)
 
 	i=0;
 	/* Select the channel(s) (up  to 16) we want to convert. */
-	channel_array[i++] = 1; // 1
+	channel_array[i++] = 0; // 1
+	channel_array[i++] = 1;
 	channel_array[i++] = 2;
 	channel_array[i++] = 3;
-	channel_array[i++] = 4;
-	channel_array[i++] = 5; // 5
+	channel_array[i++] = 4; // 5
 
 
 	adc_set_regular_sequence(ADC1, 5, channel_array);

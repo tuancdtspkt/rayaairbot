@@ -29,8 +29,12 @@ void dma_setup()
     //END ADC
 }
 
+#define A 0.4
+#define B 0.6
+
 void dma1_channel1_isr()
 {
+    static float result_array_raw_filtrado[5] = {0,0,0,0,0};
 	int i;
 
 	/*
@@ -49,7 +53,8 @@ void dma1_channel1_isr()
 
 	// Quitando el offset
 	for(i=0; i<5; i++) {
-		result_array[i] = result_array_raw[i] - adc_offset[i];
+
+		result_array[i] = (result_array_raw[i] - adc_offset[i]);
 	}
 
 	dma_flag = 1; // new data, for the loop in main()
